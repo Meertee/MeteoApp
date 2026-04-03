@@ -1,3 +1,7 @@
 <Solution>
-  <Project Path="MeteoApp/MeteoApp.csproj" />
+  <Project Path="MeteoApp.Core/MeteoApp.Core.csproj" Id="1c1b4d32-c92b-4318-9b75-eebf59152b50" />
+  <Project Path="MeteoApp/MeteoApp.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+  <Project Path="tests/MeteoApp.Core.Tests/MeteoApp.Core.Tests.csproj" Id="b28311a2-c776-4525-a151-b2d0ec06e003" />
 </Solution>
