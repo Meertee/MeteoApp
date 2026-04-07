@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Template
+namespace MeteoApp
 {
     public static class MauiProgram
     {

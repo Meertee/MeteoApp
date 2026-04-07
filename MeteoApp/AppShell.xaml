@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Shell
-    x:Class="Template.AppShell"
+    x:Class="MeteoApp.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:Template"
-    Title="Template">
+    xmlns:views="clr-namespace:MeteoApp.Views"
+    Title="MeteoApp">
 
     <ShellContent
         Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        ContentTemplate="{DataTemplate views:MeteoListPage}"
+        Route="MeteoListPage" />  
 
 </Shell>

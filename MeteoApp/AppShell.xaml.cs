@@ -1,4 +1,4 @@
-﻿namespace Template
+﻿namespace MeteoApp
 {
     public partial class AppShell : Shell
     {

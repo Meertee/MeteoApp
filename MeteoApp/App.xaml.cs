@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Template
+namespace MeteoApp
 {
     public partial class App : Application
     {
@@ -12,6 +12,7 @@ namespace Template
         protected override Window CreateWindow(IActivationState? activationState)
         {
             return new Window(new AppShell());
+// APP starta
         }
     }
 }
