@@ -1,4 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
+using MeteoApp.Core.Services;
+using MeteoApp.Core.ViewModels;
+using MeteoApp.Services;
+using MeteoApp.Views;
 
 namespace MeteoApp
 {
@@ -18,6 +22,13 @@ namespace MeteoApp
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
+
+            // Registrazione Servizi
+            builder.Services.AddSingleton<ILocationService, LocationService>();
+
+            // Registrazione ViewModels e Views
+            builder.Services.AddTransient<MeteoListViewModel>();
+            builder.Services.AddTransient<MeteoListPage>();
 
             return builder.Build();
         }

@@ -1,18 +1,18 @@
 ﻿using MeteoApp.Core.Models;
-
+using MeteoApp.Core.Services;
 using System.Collections.ObjectModel;
-
-
+using System.Threading.Tasks;
 
 namespace MeteoApp.Core.ViewModels
 {
     public class MeteoListViewModel : BaseViewModel
     {
-        ObservableCollection<Entry> _entries;
+        private readonly ILocationService _locationService;
 
+        private ObservableCollection<Entry> _entries = new ObservableCollection<Entry>();
         public ObservableCollection<Entry> Entries
         {
-            get { return _entries; }
+            get => _entries;
             set
             {
                 _entries = value;
@@ -20,18 +20,33 @@ namespace MeteoApp.Core.ViewModels
             }
         }
 
-        public MeteoListViewModel()
+        public MeteoListViewModel(ILocationService locationService)
         {
-            Entries = new ObservableCollection<Entry>();
+            _locationService = locationService;
+            // Avvia il caricamento asincrono senza bloccare il costruttore
+            _ = LoadCurrentLocationAsync();
+        }
 
-            for (var i = 0; i < 2; i++)
+        private async Task LoadCurrentLocationAsync()
+        {
+            try
             {
-                var e = new Entry
+                var currentEntry = await _locationService.GetCurrentLocationAsync();
+                if (currentEntry != null)
                 {
-                    Id = i
-                };
+                   
+                    Entries.Insert(0, currentEntry);
+                }
+            }
 
-                Entries.Add(e);
+            catch (HttpRequestException ex)
+            {
+                // connectivity problem
+            }
+            catch (Exception ex)
+            {
+              
+                System.Diagnostics.Debug.WriteLine($"Errore caricando la posizione: {ex.Message}");
             }
         }
     }

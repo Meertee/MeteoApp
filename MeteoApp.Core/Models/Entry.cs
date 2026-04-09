@@ -4,7 +4,13 @@ namespace MeteoApp.Core.Models
     public class Entry
     {
         public int Id { get; set; }
-        // Se nel tuo XAML c'è un IsVisible="{Binding Done}", aggiungi anche la proprietà Done:
+        public string CityName { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+
+        public bool IsCurrentLocation { get; set; }
+
+       
         public bool Done { get; set; }
     }
 }

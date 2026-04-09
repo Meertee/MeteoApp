@@ -9,13 +9,13 @@ public partial class MeteoListPage : Shell
 {
     public Dictionary<string, Type> Routes { get; private set; } = new Dictionary<string, Type>();
 
-    public MeteoListPage()
+    public MeteoListPage(MeteoListViewModel viewModel)
     {
         InitializeComponent();
         RegisterRoutes();
 
         // Istanzia il ViewModel che ora risiede in MeteoApp.Core
-        BindingContext = new MeteoListViewModel();
+        BindingContext = viewModel;
     }
 
     private void RegisterRoutes()

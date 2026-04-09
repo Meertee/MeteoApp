@@ -11,7 +11,11 @@
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Margin="20,0,0,0" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                            <Label Text="{Binding Id}" VerticalTextAlignment="Center" HorizontalOptions="StartAndExpand" />
+                            <Label Text="{Binding CityName}" 
+                               VerticalTextAlignment="Center" 
+                               HorizontalOptions="StartAndExpand" 
+                               FontSize="18" 
+                               FontAttributes="Bold" />
                             <Image Source="check.png" HorizontalOptions="End" IsVisible="{Binding Done}" />
                         </StackLayout>
                     </ViewCell>
