@@ -26,18 +26,38 @@ public partial class MeteoListPage : Shell
             Routing.RegisterRoute(item.Key, item.Value);
     }
 
-    private void OnListItemSelected(object sender, SelectedItemChangedEventArgs e)
+    private async void OnListItemSelected(object sender, SelectedItemChangedEventArgs e)
     {
         if (e.SelectedItem != null)
         {
-            ModelEntry entry = e.SelectedItem as ModelEntry;
+            ModelEntry selectedEntry = (ModelEntry)e.SelectedItem;
 
-            var navigationParameter = new Dictionary<string, object>
+            //Deseleziona
+            ListView list = (ListView)sender;
+            list.SelectedItem = null;
+
+            // CONTROLLO: È la voce del GPS?
+            if (selectedEntry.IsCurrentLocation)
             {
-                { "Entry", entry }
+               // prende il modello dal binding recupera il modello collegato alla view
+                MeteoListViewModel viewModel = (MeteoListViewModel)BindingContext;
+
+                // Facciamo partire il metodo che abbiamo appena creato!
+                if (viewModel != null)
+                {
+                    await viewModel.FetchLocationOnClickAsync();
+                }
+            }
+            else
+            {
+               
+                Dictionary<string, object> navigationParameter = new Dictionary<string, object>
+            {
+                { "Entry", selectedEntry }
             };
 
-            Shell.Current.GoToAsync($"entrydetails", navigationParameter);
+                await Shell.Current.GoToAsync($"entrydetails", navigationParameter);
+            }
         }
     }
 

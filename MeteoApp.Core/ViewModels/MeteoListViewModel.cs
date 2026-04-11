@@ -22,32 +22,62 @@ namespace MeteoApp.Core.ViewModels
 
         public MeteoListViewModel(ILocationService locationService)
         {
+            //Aggiunge la prima riga
             _locationService = locationService;
-            // Avvia il caricamento asincrono senza bloccare il costruttore
-            _ = LoadCurrentLocationAsync();
+            
+            Entry placeholder = new Entry
+            {
+                Id = 0,
+                CityName = "📍 Tocca qui per la tua posizione",
+                IsCurrentLocation = true
+            };
+
+            Entries.Add(placeholder);
         }
 
-        private async Task LoadCurrentLocationAsync()
+        public async Task FetchLocationOnClickAsync()
         {
-            try
+            Entry placeholderEntry = Entries.FirstOrDefault(e => e.IsCurrentLocation);
+            if (placeholderEntry!=null)
             {
-                var currentEntry = await _locationService.GetCurrentLocationAsync();
-                if (currentEntry != null)
+                int index = Entries.IndexOf(placeholderEntry);
+                Entries[index] = new Entry
+                {
+                    Id = 0,
+                    CityName = "⏳ Ricerca del GPS in corso...",
+                    IsCurrentLocation = true
+                };
+                try
                 {
                    
-                    Entries.Insert(0, currentEntry);
+                    Entry currentEntry = await _locationService.GetCurrentLocationAsync();
+
+                    if (currentEntry != null)
+                    {
+                        
+                        Entries[index] = currentEntry;
+                    }
+                    else
+                    {
+                       
+                        Entries[index] = new Entry { Id = 0, CityName = "❌ Posizione non trovata (Riprova)", IsCurrentLocation = true };
+                    }
+                }
+                catch (HttpRequestException ex)
+                {
+                    // connectivity problem
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Errore caricando la posizione: {ex.Message}");
+                    
+                    Entries[index] = new Entry { Id = 0, CityName = "❌ Errore GPS (Tocca per riprovare)", IsCurrentLocation = true };
                 }
             }
 
-            catch (HttpRequestException ex)
-            {
-                // connectivity problem
-            }
-            catch (Exception ex)
-            {
-              
-                System.Diagnostics.Debug.WriteLine($"Errore caricando la posizione: {ex.Message}");
-            }
+          
+            
+            
         }
     }
 }
