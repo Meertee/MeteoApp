@@ -1,12 +1,17 @@
-﻿using Microsoft.Extensions.Logging;
-using MeteoApp.Core.Services;
+﻿using MeteoApp.Core.Services;
 using MeteoApp.Core.ViewModels;
 using MeteoApp.Services;
 using MeteoApp.Views;
+using Microsoft.Extensions.Logging;
 using System.IO;
+using System.Runtime.Versioning;
 
+[assembly: SupportedOSPlatform("ios14.0")]
+[assembly: SupportedOSPlatform("maccatalyst14.0")]
+[assembly: SupportedOSPlatform("android21.0")]
 namespace MeteoApp
 {
+
     public static class MauiProgram
     {
         public static MauiApp CreateMauiApp()

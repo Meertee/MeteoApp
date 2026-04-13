@@ -5,11 +5,13 @@ using MeteoApp.Core.ViewModels;
 using MeteoApp.Services;
 using Microsoft.Maui.Controls.Maps;
 using Microsoft.Maui.Maps;
+using System.Runtime.Versioning;
 using ModelEntry = MeteoApp.Core.Models.Entry;
 
 namespace MeteoApp.Views;
 // il pachetto di prima
 [QueryProperty(nameof(PassedEntry), "Entry")]
+         
 public partial class MeteoMapPage : ContentPage
 {
     private readonly MeteoMapViewModel _viewModel;
@@ -52,7 +54,7 @@ public partial class MeteoMapPage : ContentPage
 
     private async void OnSuggestionSelected(object sender, SelectionChangedEventArgs e)
     {
-        GooglePlacePrediction prediction = e.CurrentSelection.FirstOrDefault() as GooglePlacePrediction;
+        GooglePlacePrediction? prediction = e.CurrentSelection.FirstOrDefault() as GooglePlacePrediction;
         if (prediction != null)
         {
 
@@ -60,7 +62,7 @@ public partial class MeteoMapPage : ContentPage
             if (coords.HasValue)
             {
                 
-                Location location = new Location(coords.Value.Latitude, coords.Value.Longitude);
+                Location location = new(coords.Value.Latitude, coords.Value.Longitude);
 
               
                 MoveMapToLocation(location, prediction.Description);

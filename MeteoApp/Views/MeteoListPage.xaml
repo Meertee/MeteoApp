@@ -3,26 +3,35 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MeteoApp.Views.MeteoListPage"
              Title="Meteo List">
+
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Add" Clicked="OnItemAdded" />
     </ContentPage.ToolbarItems>
 
-    <ListView x:Name="zlistView" Margin="20" ItemSelected="OnListItemSelected" ItemsSource="{Binding Entries}">
-        <ListView.ItemTemplate>
+    <CollectionView x:Name="zlistView" 
+                    Margin="20" 
+                    SelectionMode="Single"
+                    SelectionChanged="OnListSelectionChanged" 
+                    ItemsSource="{Binding Entries}">
+        <CollectionView.ItemTemplate>
             <DataTemplate>
-                <ViewCell>
-                    <StackLayout Margin="20,0,0,0" Orientation="Horizontal">
-                        <Label Text="{Binding CityName}" 
-                               VerticalTextAlignment="Center" 
-                               HorizontalOptions="StartAndExpand" 
-                               FontSize="18" 
-                               FontAttributes="Bold" />
-                        <Image Source="check.png" 
-                               HorizontalOptions="End" 
-                               IsVisible="{Binding Done}" />
-                    </StackLayout>
-                </ViewCell>
+                <Grid Margin="20,10,0,10" ColumnDefinitions="*, Auto">
+
+                    <Label Grid.Column="0"
+               Text="{Binding CityName}" 
+               VerticalTextAlignment="Center" 
+               FontSize="18" 
+               FontAttributes="Bold" />
+
+                    <Image Grid.Column="1"
+               Source="check.png" 
+               HorizontalOptions="End" 
+               IsVisible="{Binding Done}" 
+               WidthRequest="24"
+               HeightRequest="24" />
+                </Grid>
             </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+
 </ContentPage>

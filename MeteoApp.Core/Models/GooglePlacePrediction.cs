@@ -6,7 +6,8 @@ namespace MeteoApp.Core.Models
 {
     public class GooglePlacePrediction
     {
-        public string Description { get; set; } // Es: "Milano, MI, Italia"
-        public string Place_Id { get; set; }    // Id univoco di Google
+        public string Description { get; set; } = string.Empty;
+
+        public string Place_Id { get; set; } = string.Empty;
     }
 }

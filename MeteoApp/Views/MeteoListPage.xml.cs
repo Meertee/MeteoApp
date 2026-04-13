@@ -1,9 +1,11 @@
 ﻿using MeteoApp.Core.Models;       
-using Microsoft.Maui.Controls;
 using MeteoApp.Core.ViewModels;
+using Microsoft.Maui.Controls;
+using System.Runtime.Versioning;
 using ModelEntry = MeteoApp.Core.Models.Entry;
 
 namespace MeteoApp.Views;
+
 
 public partial class MeteoListPage : ContentPage
 {
@@ -29,7 +31,7 @@ public partial class MeteoListPage : ContentPage
         InitializeComponent();
         RegisterRoutes();
 
-        // Istanzia il ViewModel che ora risiede in MeteoApp.Core
+        
         BindingContext = viewModel;
     }
 
@@ -38,20 +40,19 @@ public partial class MeteoListPage : ContentPage
         Routes.Add("entrydetails", typeof(MeteoItemPage));
         Routes.Add("mappage", typeof(MeteoMapPage));
 
-        foreach (var item in Routes)
+        foreach (KeyValuePair<string, Type> item in Routes)
             Routing.RegisterRoute(item.Key, item.Value);
     }
 
-    private async void OnListItemSelected(object sender, SelectedItemChangedEventArgs e)
+    private async void OnListSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (e.SelectedItem != null)
+        ModelEntry? selectedEntry = e.CurrentSelection.FirstOrDefault() as ModelEntry;
+        if (selectedEntry != null)
         {
-            ModelEntry selectedEntry = (ModelEntry)e.SelectedItem;
-
-            //Deseleziona
-            ListView list = (ListView)sender;
+            CollectionView list = (CollectionView)sender;
             list.SelectedItem = null;
 
+       
             // CONTROLLO: È la voce del GPS?
             if (selectedEntry.IsCurrentLocation)
             {

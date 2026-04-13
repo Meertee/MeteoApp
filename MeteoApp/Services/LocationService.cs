@@ -30,7 +30,7 @@ namespace MeteoApp.Services
             {
              
                 IEnumerable<Location> locations = await Geocoding.Default.GetLocationsAsync(cityName);
-                Location location = Enumerable.FirstOrDefault(locations);
+                Location? location = Enumerable.FirstOrDefault(locations);
 
                 if (location != null)
                 {
@@ -52,7 +52,7 @@ namespace MeteoApp.Services
             try
             {
                 GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
-                Location location = await Geolocation.Default.GetLocationAsync(request);
+                Location? location = await Geolocation.Default.GetLocationAsync(request);
                 if (location == null)
                 {
                     Console.WriteLine("GPS non ha trovato la posizione, uso il valore di default.");
@@ -98,7 +98,7 @@ namespace MeteoApp.Services
                                     // Se trova la città, la restituisce subito e ferma la ricerca
                                     if (type.GetString() == "locality")
                                     {
-                                        return component.GetProperty("long_name").GetString();
+                                        return component.GetProperty("long_name").GetString() ?? string.Empty;
                                     }
 
                                 }
@@ -138,8 +138,8 @@ namespace MeteoApp.Services
                             
                             GooglePlacePrediction prediction = new GooglePlacePrediction
                             {
-                                Description = item.GetProperty("description").GetString(),
-                                Place_Id = item.GetProperty("place_id").GetString()
+                                Description = item.GetProperty("description").GetString() ?? string.Empty,
+                                Place_Id = item.GetProperty("place_id").GetString() ?? string.Empty
                             };
 
                             suggestionsList.Add(prediction);

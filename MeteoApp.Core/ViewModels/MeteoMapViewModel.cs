@@ -23,7 +23,7 @@ namespace MeteoApp.Core.ViewModels
             }
         }
         private bool _isSelectingSuggestion = false;
-        private string _searchText;
+        private string _searchText=string.Empty;
         public string SearchText
         {
             get => _searchText;
@@ -56,7 +56,9 @@ namespace MeteoApp.Core.ViewModels
         {
             _locationService = locationService;
             _dbService = dbService;
-            
+            _cityEntry = new Entry();
+
+
         }
 
         private async Task LoadSuggestionsAsync(string query)

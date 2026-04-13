@@ -39,7 +39,7 @@ namespace MeteoApp.Core.ViewModels
 
         public async Task FetchLocationOnClickAsync()
         {
-            Entry placeholderEntry = Entries.FirstOrDefault(e => e.IsCurrentLocation);
+            Entry? placeholderEntry = Entries.FirstOrDefault(e => e.IsCurrentLocation);
             if (placeholderEntry!=null)
             {
                 int index = Entries.IndexOf(placeholderEntry);
@@ -67,7 +67,7 @@ namespace MeteoApp.Core.ViewModels
                 }
                 catch (HttpRequestException ex)
                 {
-                    // connectivity problem
+                    System.Diagnostics.Debug.WriteLine($"Errore caricando la posizione: {ex.Message}");
                 }
                 catch (Exception ex)
                 {
@@ -82,7 +82,7 @@ namespace MeteoApp.Core.ViewModels
         {
            
             List<Entry> savedEntries = await _dbService.GetEntriesAsync();
-            Entry gpsEntry = Entries.FirstOrDefault(e => e.IsCurrentLocation);
+            Entry? gpsEntry = Entries.FirstOrDefault(e => e.IsCurrentLocation);
 
             Entries.Clear();
 

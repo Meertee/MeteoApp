@@ -4,12 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+
+//sqlite-net-sqlcipher
 namespace MeteoApp.Core.Services
 {
     public class DatabaseService
     {
 
-        private SQLiteAsyncConnection _database;
+        private SQLiteAsyncConnection? _database;
         private readonly string _dbPath;
         private readonly string _dbPassword;
 
@@ -41,7 +43,7 @@ namespace MeteoApp.Core.Services
         public async Task<List<Entry>> GetEntriesAsync()
         {
             await Init();
-            return await _database.Table<Entry>().ToListAsync();
+            return await _database!.Table<Entry>().ToListAsync();
         }
 
         public async Task<int> SaveEntryAsync(Entry entry)
@@ -49,15 +51,15 @@ namespace MeteoApp.Core.Services
             //cambia id poi
             await Init();
             if (entry.Id != 0)
-                return await _database.UpdateAsync(entry);
+                return await _database!.UpdateAsync(entry);
             else
-                return await _database.InsertAsync(entry);
+                return await _database!.InsertAsync(entry);
         }
 
         public async Task<int> DeleteEntryAsync(Entry entry)
         {
             await Init();
-            return await _database.DeleteAsync(entry);
+            return await _database!.DeleteAsync(entry);
         }
 
     }
