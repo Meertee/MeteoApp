@@ -46,12 +46,12 @@ namespace MeteoApp.Services
         }
 
 
-        private async Task<Location> GetDeviceCoordinatesAsync()
+        private static async Task<Location> GetDeviceCoordinatesAsync()
         {
-            Location defaultLocation = new Location(41.9028, 12.4964);
+            Location defaultLocation = new(41.9028, 12.4964);
             try
             {
-                GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
+                GeolocationRequest request = new (GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
                 Location? location = await Geolocation.Default.GetLocationAsync(request);
                 if (location == null)
                 {
@@ -116,7 +116,7 @@ namespace MeteoApp.Services
 
         public async Task<List<GooglePlacePrediction>> GetSuggestionsAsync(string query)
         {
-            List<GooglePlacePrediction> suggestionsList = new List<GooglePlacePrediction>();
+            List<GooglePlacePrediction> suggestionsList = [];
             try
             {
                 string url = $"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={query}&types=(cities)&language=it&key={GoogleMapsApiKey}";
@@ -136,7 +136,7 @@ namespace MeteoApp.Services
                         foreach (JsonElement item in predictionsArray.EnumerateArray())
                         {
                             
-                            GooglePlacePrediction prediction = new GooglePlacePrediction
+                            GooglePlacePrediction prediction = new()
                             {
                                 Description = item.GetProperty("description").GetString() ?? string.Empty,
                                 Place_Id = item.GetProperty("place_id").GetString() ?? string.Empty
@@ -160,7 +160,7 @@ namespace MeteoApp.Services
         public async Task<ModelEntry> GetCurrentLocationAsync()
         {
 
-            ModelEntry defaultEntry = new ModelEntry
+            ModelEntry defaultEntry = new ()
             {
                 Id = 0,
                 CityName = "(Posizione non disponibile)",
@@ -172,7 +172,7 @@ namespace MeteoApp.Services
 
             try
             {
-                Location location = await GetDeviceCoordinatesAsync();
+                Location location = await LocationService.GetDeviceCoordinatesAsync();
                 if (location != null)
                 {
                     string cityName = await GetCityNameFromGoogleAsync(location.Latitude, location.Longitude);

@@ -10,7 +10,7 @@ namespace MeteoApp.Core.ViewModels
         private readonly ILocationService _locationService;
         private readonly DatabaseService _dbService;
 
-        private ObservableCollection<Entry> _entries = new ObservableCollection<Entry>();
+        private ObservableCollection<Entry> _entries = [];
         public ObservableCollection<Entry> Entries
         {
             get => _entries;
@@ -27,7 +27,7 @@ namespace MeteoApp.Core.ViewModels
             _locationService = locationService;
             _dbService = dbService;
 
-            Entry placeholder = new Entry
+            Entry placeholder = new()
             {
                 Id = 0,
                 CityName = "📍 Tocca qui per la tua posizione",

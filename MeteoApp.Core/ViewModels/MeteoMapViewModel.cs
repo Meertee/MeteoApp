@@ -7,12 +7,12 @@ using System.Text;
 
 namespace MeteoApp.Core.ViewModels
 {
-    public class MeteoMapViewModel : BaseViewModel
+    public class MeteoMapViewModel(ILocationService locationService, DatabaseService dbService) : BaseViewModel
     {
 
-        private readonly ILocationService _locationService;
-        private readonly DatabaseService _dbService;
-        private Entry _cityEntry;
+        private readonly ILocationService _locationService = locationService;
+        private readonly DatabaseService _dbService = dbService;
+        private Entry _cityEntry = new();
         public Entry CityEntry
         {
             get => _cityEntry;
@@ -51,15 +51,7 @@ namespace MeteoApp.Core.ViewModels
             }
         }
 
-        public ObservableCollection<GooglePlacePrediction> Suggestions { get; set; } = new ObservableCollection<GooglePlacePrediction>();
-        public MeteoMapViewModel(ILocationService locationService, DatabaseService dbService)
-        {
-            _locationService = locationService;
-            _dbService = dbService;
-            _cityEntry = new Entry();
-
-
-        }
+        public ObservableCollection<GooglePlacePrediction> Suggestions { get; set; } = [];
 
         private async Task LoadSuggestionsAsync(string query)
         {

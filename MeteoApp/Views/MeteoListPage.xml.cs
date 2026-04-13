@@ -9,7 +9,7 @@ namespace MeteoApp.Views;
 
 public partial class MeteoListPage : ContentPage
 {
-    public Dictionary<string, Type> Routes { get; private set; } = new Dictionary<string, Type>();
+    public Dictionary<string, Type> Routes { get; private set; } = [];
 
 
     protected override async void OnAppearing()
@@ -46,17 +46,16 @@ public partial class MeteoListPage : ContentPage
 
     private async void OnListSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ModelEntry? selectedEntry = e.CurrentSelection.FirstOrDefault() as ModelEntry;
-        if (selectedEntry != null)
+        if (e.CurrentSelection.Count > 0 && e.CurrentSelection[0] is ModelEntry selectedEntry)
         {
             CollectionView list = (CollectionView)sender;
             list.SelectedItem = null;
 
-       
+
             // CONTROLLO: È la voce del GPS?
             if (selectedEntry.IsCurrentLocation)
             {
-               // prende il modello dal binding recupera il modello collegato alla view
+                // prende il modello dal binding recupera il modello collegato alla view
                 MeteoListViewModel viewModel = (MeteoListViewModel)BindingContext;
 
                 // Facciamo partire il metodo che abbiamo appena creato!
@@ -68,8 +67,8 @@ public partial class MeteoListPage : ContentPage
             else
             {
                 // Se clicco una città già esistente, vado ai DETTAGLI, non alla mappa
-                Dictionary<string, object> navigationParameter = new Dictionary<string, object>
-            {
+                Dictionary<string, object> navigationParameter = new()
+                {
                 { "Entry", selectedEntry }
             };
 
@@ -81,12 +80,12 @@ public partial class MeteoListPage : ContentPage
 
     private void OnItemAdded(object sender, EventArgs e)
     {
-        _ = ShowPrompt();
+        _ = MeteoListPage.ShowPrompt();
     }
 
-    private async Task ShowPrompt()
+    private static async Task ShowPrompt()
     {
-        ModelEntry newEntry = new ModelEntry
+        ModelEntry newEntry = new()
         {
             Id = 0,
             CityName = "Nuova Località",
@@ -97,8 +96,8 @@ public partial class MeteoListPage : ContentPage
         };
 
        
-        Dictionary<string, object> navigationParameter = new Dictionary<string, object>
-    {
+        Dictionary<string, object> navigationParameter = new()
+        {
         { "Entry", newEntry }
     };
 

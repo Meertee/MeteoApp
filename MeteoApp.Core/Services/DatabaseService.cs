@@ -8,18 +8,12 @@ using System.Text;
 //sqlite-net-sqlcipher
 namespace MeteoApp.Core.Services
 {
-    public class DatabaseService
+    public class DatabaseService(string dbPath, string dbPassword)
     {
 
         private SQLiteAsyncConnection? _database;
-        private readonly string _dbPath;
-        private readonly string _dbPassword;
-
-        public DatabaseService(string dbPath, string dbPassword)
-        {
-            _dbPath = dbPath;
-            _dbPassword = dbPassword;
-        }
+        private readonly string _dbPath = dbPath;
+        private readonly string _dbPassword = dbPassword;
 
         private async Task Init()
         {
@@ -27,7 +21,7 @@ namespace MeteoApp.Core.Services
             try
             {
                 SQLitePCL.Batteries_V2.Init();
-                SQLiteConnectionString options = new SQLiteConnectionString(_dbPath, true, key: _dbPassword);
+                SQLiteConnectionString options = new (_dbPath, true, key: _dbPassword);
                 _database = new SQLiteAsyncConnection(options);
                 await _database.CreateTableAsync<Entry>();
 
