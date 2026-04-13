@@ -7,11 +7,12 @@ using System.Text;
 
 namespace MeteoApp.Core.ViewModels
 {
-    public class MeteoMapViewModel(ILocationService locationService, DatabaseService dbService) : BaseViewModel
+    public class MeteoMapViewModel(ILocationService locationService, DatabaseService dbService, ISearchHandler searchHandler) : LoadingViewModel
     {
 
         private readonly ILocationService _locationService = locationService;
         private readonly DatabaseService _dbService = dbService;
+        public ISearchHandler SearchManager { get; } = searchHandler;
         private Entry _cityEntry = new();
         public Entry CityEntry
         {
@@ -20,6 +21,7 @@ namespace MeteoApp.Core.ViewModels
             {
                 _cityEntry = value;
                 OnPropertyChanged();
+                
             }
         }
         private bool _isSelectingSuggestion = false;
@@ -35,7 +37,8 @@ namespace MeteoApp.Core.ViewModels
 
                 if (!_isSelectingSuggestion)
                 {
-                    _ = LoadSuggestionsAsync(value);
+                    
+                    _ = SearchManager.LoadSuggestionsAsync(value);
                 }
             }
         }
@@ -53,35 +56,15 @@ namespace MeteoApp.Core.ViewModels
 
         public ObservableCollection<GooglePlacePrediction> Suggestions { get; set; } = [];
 
-        private async Task LoadSuggestionsAsync(string query)
-        {
-            if (string.IsNullOrWhiteSpace(query) || query.Length < 1)
-            {
-                IsSuggestionsVisible = false;
-                Suggestions.Clear();
-                return;
-            }
-
-            List<GooglePlacePrediction> results = await _locationService.GetSuggestionsAsync(query);
-
-            Suggestions.Clear();
-            foreach (GooglePlacePrediction pred in results)
-            {
-                Suggestions.Add(pred);
-            }
-
-            IsSuggestionsVisible = Suggestions.Count > 0;
-        }
-
 
         public async Task<(double Latitude, double Longitude)?> ProcessSuggestionSelectionAsync(GooglePlacePrediction prediction)
         {
             _isSelectingSuggestion = true;
             SearchText = prediction.Description;
+            SearchManager.Clear();
             //Pulizia
-            IsSuggestionsVisible = false;
-            Suggestions.Clear();
             _isSelectingSuggestion = false;
+     
 
             //tupla 
             (double Latitude, double Longitude)? coords = await _locationService.GetCoordinatesForCityAsync(prediction.Description);

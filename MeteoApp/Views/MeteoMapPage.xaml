@@ -12,8 +12,8 @@
                        Placeholder="Cerca una città (es. Milano)..." />
 
             <CollectionView x:Name="suggestionsView"
-                            ItemsSource="{Binding Suggestions}"
-                            IsVisible="{Binding IsSuggestionsVisible}"
+                            ItemsSource="{Binding SearchManager.Suggestions}"
+                            IsVisible="{Binding SearchManager.IsSuggestionsVisible}"
                             SelectionMode="Single"
                             SelectionChanged="OnSuggestionSelected"
                             BackgroundColor="White"

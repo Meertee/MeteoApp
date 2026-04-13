@@ -39,6 +39,7 @@ namespace MeteoApp
             builder.Services.AddSingleton<ILocationService, LocationService>();
             builder.Services.AddTransient<MeteoMapPage>();
             builder.Services.AddTransient<MeteoMapViewModel>();
+            builder.Services.AddTransient<ISearchHandler, CitySearchHandler>();
 
 
             // Registrazione ViewModels e Views
