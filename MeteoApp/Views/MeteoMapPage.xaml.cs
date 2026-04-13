@@ -15,42 +15,48 @@ namespace MeteoApp.Views;
 public partial class MeteoMapPage : ContentPage
 {
     private readonly MeteoMapViewModel _viewModel;
+    private readonly IMapService _mapService;
 
     public ModelEntry PassedEntry
     {
         get => _viewModel.CityEntry;
-        set
-        {
-            _viewModel.CityEntry = value;
-            CenterMapOnEntry();
-        }
+        set => _viewModel.CityEntry = value;
     }
 
-    public MeteoMapPage(MeteoMapViewModel viewModel)
+    public MeteoMapPage(MeteoMapViewModel viewModel, IMapService mapService)
     {
         InitializeComponent();
         _viewModel = viewModel;
+        _mapService = mapService;
         BindingContext = _viewModel;
     }
 
-    private void CenterMapOnEntry()
+    protected override async void OnAppearing()
     {
-        if (_viewModel.CityEntry != null && _viewModel.CityEntry.Latitude != 0)
+        base.OnAppearing();
+
+    
+        if (_viewModel.CityEntry.Latitude == 0)
         {
-            Location location = new (_viewModel.CityEntry.Latitude, _viewModel.CityEntry.Longitude);
-            MoveMapToLocation(location, _viewModel.CityEntry.CityName);
+            var result = await _viewModel.LoadCurrentLocationAsync();
+            if (result.HasValue)
+                _mapService.CenterAndPin(myMap, new Location(result.Value.Latitude, result.Value.Longitude), result.Value.CityName);
+        }
+        else
+        {
+            _mapService.CenterAndPin(myMap, new Location(_viewModel.CityEntry.Latitude, _viewModel.CityEntry.Longitude), _viewModel.CityEntry.CityName);
         }
     }
-
-    private void MoveMapToLocation(Location location, string label)
+    private async void OnMapClicked(object sender, MapClickedEventArgs e)
     {
-        myMap.Pins.Clear();
-        MapSpan mapSpan = MapSpan.FromCenterAndRadius(location, Distance.FromKilometers(2));
-        myMap.MoveToRegion(mapSpan);
-
-        Pin pin = new() { Label = label, Location = location, Type = PinType.Place };
-        myMap.Pins.Add(pin);
+        _mapService.ShowLoadingPin(myMap, e.Location);
+        string cityName = await _viewModel.ProcessMapClickAsync(e.Location.Latitude, e.Location.Longitude);
+        _mapService.CenterAndPin(myMap, e.Location, cityName);
     }
+
+
+
+  
 
     private async void OnSuggestionSelected(object sender, SelectionChangedEventArgs e)
     {
@@ -61,34 +67,13 @@ public partial class MeteoMapPage : ContentPage
             if (coords.HasValue)
             {
 
-                Location location = new(coords.Value.Latitude, coords.Value.Longitude);
-
-
-                MoveMapToLocation(location, prediction.Description);
+                _mapService.CenterAndPin(myMap, new Location(coords.Value.Latitude, coords.Value.Longitude), prediction.Description);
             }
         }
         ((CollectionView)sender).SelectedItem = null; 
     }
 
-    private async void OnMapClicked(object sender, MapClickedEventArgs e)
-    {
-        myMap.Pins.Clear();
-        Pin loadingPin = new () { Label = "Ricerca nome...", Location = e.Location };
-        myMap.Pins.Add(loadingPin);
-
-        // Delega la logica API al ViewModel
-        string realCityName = await _viewModel.ProcessMapClickAsync(e.Location.Latitude, e.Location.Longitude);
-        myMap.Pins.Clear();
-        Pin finalPin = new()
-        {
-            Label = realCityName,
-            Address = $"Lat: {e.Location.Latitude:F3}, Lon: {e.Location.Longitude:F3}",
-            Location = e.Location,
-            Type = PinType.Place
-        };
-
-        myMap.Pins.Add(finalPin);
-    }
+   
 
     private async void OnSaveClicked(object sender, EventArgs e)
     {
@@ -98,28 +83,7 @@ public partial class MeteoMapPage : ContentPage
         await Shell.Current.GoToAsync("..");
     }
 
-    protected override async void OnAppearing()
-    {
-        base.OnAppearing();
-
-        if (_viewModel.CityEntry.Latitude == 0)
-        {
-           
-            (double Latitude, double Longitude, string CityName)? result = await _viewModel.LoadCurrentLocationAsync();
-
-            if (result.HasValue)
-            {
-               
-                Location location = new (result.Value.Latitude, result.Value.Longitude);
-                MoveMapToLocation(location, result.Value.CityName);
-            }
-        }
-        else
-        {
-            
-            CenterMapOnEntry();
-        }
-    }
+ 
 
 
 }
