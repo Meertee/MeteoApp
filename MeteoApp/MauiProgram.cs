@@ -1,4 +1,5 @@
 ﻿using MeteoApp.Core.Services;
+using MeteoApp.Core.Services.MeteoApp.Core.Services;
 using MeteoApp.Core.ViewModels;
 using MeteoApp.Services;
 using MeteoApp.Views;
@@ -36,6 +37,9 @@ namespace MeteoApp
 
             // Registrazione Servizi
             builder.Services.AddSingleton<DatabaseService>(new DatabaseService(dbPath, dbPassword));
+            builder.Services.AddSingleton<HttpClient>();
+            builder.Services.AddSingleton<IGpsService, GpsService>();
+            builder.Services.AddSingleton<IGoogleMapsApiService, GoogleMapsApiService>();
             builder.Services.AddSingleton<ILocationService, LocationService>();
             builder.Services.AddTransient<MeteoMapPage>();
             builder.Services.AddTransient<MeteoMapViewModel>();

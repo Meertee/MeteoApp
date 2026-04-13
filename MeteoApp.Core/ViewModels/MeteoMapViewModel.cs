@@ -80,7 +80,7 @@ namespace MeteoApp.Core.ViewModels
 
         public async Task<string> ProcessMapClickAsync(double lat, double lon)
         {
-            string realCityName = await _locationService.GetCityNameFromGoogleAsync(lat, lon);
+            string realCityName = await _locationService.GetCityNameAsync(lat, lon);
             CityEntry.Latitude = lat;
             CityEntry.Longitude = lon;
             CityEntry.CityName = realCityName;
