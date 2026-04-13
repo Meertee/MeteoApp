@@ -21,7 +21,7 @@ namespace MeteoApp.Core.ViewModels
                 OnPropertyChanged();
             }
         }
-
+        private bool _isSelectingSuggestion = false;
         private string _searchText;
         public string SearchText
         {
@@ -30,8 +30,12 @@ namespace MeteoApp.Core.ViewModels
             {
                 _searchText = value;
                 OnPropertyChanged();
-                // Quando il testo cambia, avvia la ricerca (Fire & Forget)
-                _ = LoadSuggestionsAsync(value);
+
+
+                if (!_isSelectingSuggestion)
+                {
+                    _ = LoadSuggestionsAsync(value);
+                }
             }
         }
 
@@ -76,8 +80,13 @@ namespace MeteoApp.Core.ViewModels
 
         public async Task<(double Latitude, double Longitude)?> ProcessSuggestionSelectionAsync(GooglePlacePrediction prediction)
         {
-            IsSuggestionsVisible = false;
+            _isSelectingSuggestion = true;
             SearchText = prediction.Description;
+            //Pulizia
+            IsSuggestionsVisible = false;
+            Suggestions.Clear();
+            _isSelectingSuggestion = false;
+
             //tupla 
             (double Latitude, double Longitude)? coords = await _locationService.GetCoordinatesForCityAsync(prediction.Description);
 
@@ -97,6 +106,24 @@ namespace MeteoApp.Core.ViewModels
             CityEntry.Longitude = lon;
             CityEntry.CityName = realCityName;
             return realCityName;
+        }
+
+        public async Task<(double Latitude, double Longitude, string CityName)?> LoadCurrentLocationAsync()
+        {
+           
+            Entry currentGpsEntry = await _locationService.GetCurrentLocationAsync();
+
+            if (currentGpsEntry != null)
+            {
+             
+                CityEntry.Latitude = currentGpsEntry.Latitude;
+                CityEntry.Longitude = currentGpsEntry.Longitude;
+                CityEntry.CityName = currentGpsEntry.CityName;
+
+                return (currentGpsEntry.Latitude, currentGpsEntry.Longitude, currentGpsEntry.CityName);
+            }
+
+            return null;
         }
 
 

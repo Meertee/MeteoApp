@@ -74,8 +74,8 @@ public partial class MeteoListPage : ContentPage
         {
             Id = 0,
             CityName = "Nuova Località",
-            Latitude = 41.9028, 
-            Longitude = 12.4964,
+            Latitude = 0, 
+            Longitude = 0,
             IsCurrentLocation = false,
             Done = false
         };

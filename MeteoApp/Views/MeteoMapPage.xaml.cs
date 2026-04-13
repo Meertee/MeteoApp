@@ -77,9 +77,16 @@ public partial class MeteoMapPage : ContentPage
 
         // Delega la logica API al ViewModel
         string realCityName = await _viewModel.ProcessMapClickAsync(e.Location.Latitude, e.Location.Longitude);
+        myMap.Pins.Clear();
+        Pin finalPin = new Pin
+        {
+            Label = realCityName,
+            Address = $"Lat: {e.Location.Latitude:F3}, Lon: {e.Location.Longitude:F3}",
+            Location = e.Location,
+            Type = PinType.Place
+        };
 
-        loadingPin.Label = realCityName;
-        loadingPin.Address = $"Lat: {e.Location.Latitude:F3}, Lon: {e.Location.Longitude:F3}";
+        myMap.Pins.Add(finalPin);
     }
 
     private async void OnSaveClicked(object sender, EventArgs e)
@@ -88,14 +95,31 @@ public partial class MeteoMapPage : ContentPage
         await Shell.Current.GoToAsync("..");
     }
 
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
 
+        if (_viewModel.CityEntry.Latitude == 0)
+        {
+           
+            (double Latitude, double Longitude, string CityName)? result = await _viewModel.LoadCurrentLocationAsync();
 
-
-
-
-
-
-
+            if (result.HasValue)
+            {
+               
+                Location location = new Location(result.Value.Latitude, result.Value.Longitude);
+                MoveMapToLocation(location, result.Value.CityName);
+            }
+        }
+        else
+        {
+            
+            CenterMapOnEntry();
+        }
+    }
 
 
 }
+
+
+
