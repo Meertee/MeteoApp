@@ -1,27 +1,30 @@
 ﻿namespace MeteoApp;
 
+using Microsoft.Maui.Controls;
+using ModelEntry = MeteoApp.Core.Models.Entry;
+
 [QueryProperty(nameof(Entry), "Entry")]
 public partial class MeteoItemPage : ContentPage
 {
-    Entry entry;
-    public Entry Entry
+    private ModelEntry _passedEntry;
+    public ModelEntry PassedEntry
     {
-        get => entry;
+        get => _passedEntry;
         set
         {
-            entry = value;
+            _passedEntry = value;
             OnPropertyChanged();
+
+         
+            BindingContext = _passedEntry;
         }
     }
 
     public MeteoItemPage()
     {
         InitializeComponent();
-        BindingContext = this;
+        
     }
 
-    protected override void OnAppearing()
-    {
-        base.OnAppearing();
-    }
+    
 }

@@ -69,6 +69,7 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="10.0.51" />
+		<PackageReference Include="sqlite-net-sqlcipher" Version="1.9.172" />
 	</ItemGroup>
 
 	<ItemGroup>

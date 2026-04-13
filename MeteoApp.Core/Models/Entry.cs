@@ -1,8 +1,11 @@
 ﻿
+using SQLite;
+
 namespace MeteoApp.Core.Models
 {
     public class Entry
     {
+        [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public string CityName { get; set; }
         public double Latitude { get; set; }

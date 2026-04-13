@@ -9,6 +9,21 @@ public partial class MeteoListPage : ContentPage
 {
     public Dictionary<string, Type> Routes { get; private set; } = new Dictionary<string, Type>();
 
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+       
+        MeteoListViewModel viewModel = (MeteoListViewModel)BindingContext;
+
+        if (viewModel != null)
+        {
+           
+            await viewModel.LoadEntriesAsync();
+        }
+    }
+
     public MeteoListPage(MeteoListViewModel viewModel)
     {
         InitializeComponent();

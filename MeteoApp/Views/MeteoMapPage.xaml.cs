@@ -91,7 +91,9 @@ public partial class MeteoMapPage : ContentPage
 
     private async void OnSaveClicked(object sender, EventArgs e)
     {
-        await DisplayAlert("Salvataggio", $"Pronto per salvare: {_viewModel.CityEntry.CityName}", "OK");
+
+        await _viewModel.SaveCityAsync();
+        await DisplayAlertAsync("Successo", $"{_viewModel.CityEntry.CityName} salvata correttamente!", "OK");
         await Shell.Current.GoToAsync("..");
     }
 

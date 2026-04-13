@@ -8,6 +8,7 @@ namespace MeteoApp.Core.ViewModels
     public class MeteoListViewModel : BaseViewModel
     {
         private readonly ILocationService _locationService;
+        private readonly DatabaseService _dbService;
 
         private ObservableCollection<Entry> _entries = new ObservableCollection<Entry>();
         public ObservableCollection<Entry> Entries
@@ -20,11 +21,12 @@ namespace MeteoApp.Core.ViewModels
             }
         }
 
-        public MeteoListViewModel(ILocationService locationService)
+        public MeteoListViewModel(ILocationService locationService, DatabaseService dbService)
         {
             //Aggiunge la prima riga
             _locationService = locationService;
-            
+            _dbService = dbService;
+
             Entry placeholder = new Entry
             {
                 Id = 0,
@@ -73,11 +75,29 @@ namespace MeteoApp.Core.ViewModels
                     
                     Entries[index] = new Entry { Id = 0, CityName = "❌ Errore GPS (Tocca per riprovare)", IsCurrentLocation = true };
                 }
+            }     
+        }
+
+        public async Task LoadEntriesAsync()
+        {
+           
+            List<Entry> savedEntries = await _dbService.GetEntriesAsync();
+            Entry gpsEntry = Entries.FirstOrDefault(e => e.IsCurrentLocation);
+
+            Entries.Clear();
+
+            if (gpsEntry != null)
+            {
+                Entries.Add(gpsEntry);
             }
 
-          
-            
-            
+            foreach (Entry entry in savedEntries)
+            {
+                if (!entry.IsCurrentLocation)
+                {
+                    Entries.Add(entry);
+                }
+            }
         }
     }
 }

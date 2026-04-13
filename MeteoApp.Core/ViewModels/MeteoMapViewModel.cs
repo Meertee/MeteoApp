@@ -11,6 +11,7 @@ namespace MeteoApp.Core.ViewModels
     {
 
         private readonly ILocationService _locationService;
+        private readonly DatabaseService _dbService;
         private Entry _cityEntry;
         public Entry CityEntry
         {
@@ -51,10 +52,11 @@ namespace MeteoApp.Core.ViewModels
         }
 
         public ObservableCollection<GooglePlacePrediction> Suggestions { get; set; } = new ObservableCollection<GooglePlacePrediction>();
-        public MeteoMapViewModel(ILocationService locationService)
+        public MeteoMapViewModel(ILocationService locationService, DatabaseService dbService)
         {
             _locationService = locationService;
-            CityEntry = new Entry();
+            _dbService = dbService;
+            
         }
 
         private async Task LoadSuggestionsAsync(string query)
@@ -106,6 +108,7 @@ namespace MeteoApp.Core.ViewModels
             CityEntry.Longitude = lon;
             CityEntry.CityName = realCityName;
             return realCityName;
+            
         }
 
         public async Task<(double Latitude, double Longitude, string CityName)?> LoadCurrentLocationAsync()
@@ -124,6 +127,14 @@ namespace MeteoApp.Core.ViewModels
             }
 
             return null;
+        }
+
+        public async Task SaveCityAsync()
+        {
+            if (CityEntry != null && !string.IsNullOrWhiteSpace(CityEntry.CityName))
+            {
+                await _dbService.SaveEntryAsync(CityEntry);
+            }
         }
 
 
