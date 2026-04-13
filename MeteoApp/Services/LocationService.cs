@@ -1,4 +1,5 @@
-﻿using MeteoApp.Core.Services;
+﻿using MeteoApp.Core.Models;
+using MeteoApp.Core.Services;
 using Microsoft.Maui.Devices.Sensors;
 using System;
 using System.ComponentModel;
@@ -23,6 +24,27 @@ namespace MeteoApp.Services
             this._httpClient = new HttpClient();
         }
 
+        public async Task<(double Latitude, double Longitude)?> GetCoordinatesForCityAsync(string cityName)
+        {
+            try
+            {
+             
+                IEnumerable<Location> locations = await Geocoding.Default.GetLocationsAsync(cityName);
+                Location location = Enumerable.FirstOrDefault(locations);
+
+                if (location != null)
+                {
+                    // Restituiamo solo i numeri puri al Core
+                    return (location.Latitude, location.Longitude);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Errore Geocoding: {ex.Message}");
+            }
+            return null;
+        }
+
 
         private async Task<Location> GetDeviceCoordinatesAsync()
         {
@@ -44,7 +66,7 @@ namespace MeteoApp.Services
                 return defaultLocation;
             }
         }
-        private async Task<string> GetCityNameFromGoogleAsync(double latitude, double longitude)
+        public async Task<string> GetCityNameFromGoogleAsync(double latitude, double longitude)
         {
             string defaultCityName = "Posizione Attuale";
             try
@@ -52,7 +74,7 @@ namespace MeteoApp.Services
                 string lat = latitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
                 string lon = longitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
-                string url = $"https://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lon}&key={GoogleMapsApiKey}";
+                string url = $"https://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lon}&language=it&key={GoogleMapsApiKey}";
 
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 
@@ -90,6 +112,50 @@ namespace MeteoApp.Services
                 Console.WriteLine($"Errore chiamata API Google: {ex.Message}");
             }
             return defaultCityName;
+        }
+
+        public async Task<List<GooglePlacePrediction>> GetSuggestionsAsync(string query)
+        {
+            List<GooglePlacePrediction> suggestionsList = new List<GooglePlacePrediction>();
+            try
+            {
+                string url = $"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={query}&types=(cities)&language=it&key={GoogleMapsApiKey}";
+                HttpResponseMessage response = await _httpClient.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    string json = await response.Content.ReadAsStringAsync();
+                    using JsonDocument doc = JsonDocument.Parse(json);
+                    JsonElement root = doc.RootElement;
+                   
+                    if (root.GetProperty("status").GetString() == "OK")
+                    {
+                       
+                        JsonElement predictionsArray = root.GetProperty("predictions");
+
+                      
+                        foreach (JsonElement item in predictionsArray.EnumerateArray())
+                        {
+                            
+                            GooglePlacePrediction prediction = new GooglePlacePrediction
+                            {
+                                Description = item.GetProperty("description").GetString(),
+                                Place_Id = item.GetProperty("place_id").GetString()
+                            };
+
+                            suggestionsList.Add(prediction);
+                        }
+                    }
+
+
+                }
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine($"Errore chiamando Google Places: {ex.Message}");
+            }
+
+            return suggestionsList;
+
         }
         public async Task<ModelEntry> GetCurrentLocationAsync()
         {
@@ -129,6 +195,12 @@ namespace MeteoApp.Services
             return defaultEntry;
         }
 
-        
+       
+
+
+
+
+
+
     }
 }

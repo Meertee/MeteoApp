@@ -1,26 +1,28 @@
-﻿<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MeteoApp.Views.MeteoListPage">
-    <ContentPage>
-        <ContentPage.ToolbarItems>
-            <ToolbarItem Text="Add" Clicked="OnItemAdded" />
-        </ContentPage.ToolbarItems>
+             x:Class="MeteoApp.Views.MeteoListPage"
+             Title="Meteo List">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Add" Clicked="OnItemAdded" />
+    </ContentPage.ToolbarItems>
 
-        <ListView x:Name="zlistView" Margin="20" ItemSelected="OnListItemSelected" ItemsSource="{Binding Entries}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <StackLayout Margin="20,0,0,0" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                            <Label Text="{Binding CityName}" 
+    <ListView x:Name="zlistView" Margin="20" ItemSelected="OnListItemSelected" ItemsSource="{Binding Entries}">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ViewCell>
+                    <StackLayout Margin="20,0,0,0" Orientation="Horizontal">
+                        <Label Text="{Binding CityName}" 
                                VerticalTextAlignment="Center" 
                                HorizontalOptions="StartAndExpand" 
                                FontSize="18" 
                                FontAttributes="Bold" />
-                            <Image Source="check.png" HorizontalOptions="End" IsVisible="{Binding Done}" />
-                        </StackLayout>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </ContentPage>
-</Shell>
+                        <Image Source="check.png" 
+                               HorizontalOptions="End" 
+                               IsVisible="{Binding Done}" />
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</ContentPage>

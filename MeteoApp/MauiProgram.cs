@@ -13,6 +13,7 @@ namespace MeteoApp
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiMaps()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -25,6 +26,8 @@ namespace MeteoApp
 
             // Registrazione Servizi
             builder.Services.AddSingleton<ILocationService, LocationService>();
+            builder.Services.AddTransient<MeteoMapPage>();
+            builder.Services.AddTransient<MeteoMapViewModel>();
 
             // Registrazione ViewModels e Views
             builder.Services.AddTransient<MeteoListViewModel>();

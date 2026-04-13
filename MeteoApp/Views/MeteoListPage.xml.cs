@@ -5,7 +5,7 @@ using ModelEntry = MeteoApp.Core.Models.Entry;
 
 namespace MeteoApp.Views;
 
-public partial class MeteoListPage : Shell
+public partial class MeteoListPage : ContentPage
 {
     public Dictionary<string, Type> Routes { get; private set; } = new Dictionary<string, Type>();
 
@@ -21,6 +21,7 @@ public partial class MeteoListPage : Shell
     private void RegisterRoutes()
     {
         Routes.Add("entrydetails", typeof(MeteoItemPage));
+        Routes.Add("mappage", typeof(MeteoMapPage));
 
         foreach (var item in Routes)
             Routing.RegisterRoute(item.Key, item.Value);
@@ -50,14 +51,15 @@ public partial class MeteoListPage : Shell
             }
             else
             {
-               
+                // Se clicco una città già esistente, vado ai DETTAGLI, non alla mappa
                 Dictionary<string, object> navigationParameter = new Dictionary<string, object>
             {
                 { "Entry", selectedEntry }
             };
 
-                await Shell.Current.GoToAsync($"entrydetails", navigationParameter);
+                await Shell.Current.GoToAsync("entrydetails", navigationParameter);
             }
+
         }
     }
 
@@ -68,6 +70,23 @@ public partial class MeteoListPage : Shell
 
     private async Task ShowPrompt()
     {
-        await DisplayAlert("Add City", "To Be Implemented", "OK");
+        ModelEntry newEntry = new ModelEntry
+        {
+            Id = 0,
+            CityName = "Nuova Località",
+            Latitude = 41.9028, 
+            Longitude = 12.4964,
+            IsCurrentLocation = false,
+            Done = false
+        };
+
+       
+        Dictionary<string, object> navigationParameter = new Dictionary<string, object>
+    {
+        { "Entry", newEntry }
+    };
+
+       
+        await Shell.Current.GoToAsync("mappage", navigationParameter);
     }
 }
