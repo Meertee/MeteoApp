@@ -19,6 +19,7 @@ namespace MeteoApp
         {
             var builder = MauiApp.CreateBuilder();
 
+            string weatherApiKey = "API_KEY";
             string dbPath = Path.Combine(FileSystem.AppDataDirectory, "MeteoSecure.db3");
             string dbPassword = "LinkPrime1234567";
 
@@ -45,11 +46,15 @@ namespace MeteoApp
             builder.Services.AddTransient<MeteoMapViewModel>();
             builder.Services.AddTransient<ISearchHandler, CitySearchHandler>();
             builder.Services.AddSingleton<IMapService, MauiMapService>();
+            builder.Services.AddSingleton<WeatherService>(new WeatherService(weatherApiKey));
 
 
             // Registrazione ViewModels e Views
             builder.Services.AddTransient<MeteoListViewModel>();
             builder.Services.AddTransient<MeteoListPage>();
+
+            builder.Services.AddTransient<MeteoItemViewModel>();
+            builder.Services.AddTransient<MeteoItemPage>();
 
             return builder.Build();
         }

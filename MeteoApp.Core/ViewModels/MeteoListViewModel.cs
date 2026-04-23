@@ -10,8 +10,8 @@ namespace MeteoApp.Core.ViewModels
         private readonly ILocationService _locationService;
         private readonly DatabaseService _dbService;
 
-        private ObservableCollection<Entry> _entries = [];
-        public ObservableCollection<Entry> Entries
+        private ObservableCollection<WeatherLocation> _entries = [];
+        public ObservableCollection<WeatherLocation> Entries
         {
             get => _entries;
             set
@@ -27,7 +27,7 @@ namespace MeteoApp.Core.ViewModels
             _locationService = locationService;
             _dbService = dbService;
 
-            Entry placeholder = new()
+            WeatherLocation placeholder = new()
             {
                 Id = 0,
                 CityName = "📍 Tocca qui per la tua posizione",
@@ -39,11 +39,11 @@ namespace MeteoApp.Core.ViewModels
 
         public async Task FetchLocationOnClickAsync()
         {
-            Entry? placeholderEntry = Entries.FirstOrDefault(e => e.IsCurrentLocation);
+            WeatherLocation? placeholderEntry = Entries.FirstOrDefault(e => e.IsCurrentLocation);
             if (placeholderEntry!=null)
             {
                 int index = Entries.IndexOf(placeholderEntry);
-                Entries[index] = new Entry
+                Entries[index] = new WeatherLocation
                 {
                     Id = 0,
                     CityName = "⏳ Ricerca del GPS in corso...",
@@ -52,7 +52,7 @@ namespace MeteoApp.Core.ViewModels
                 try
                 {
                    
-                    Entry currentEntry = await _locationService.GetCurrentLocationAsync();
+                    WeatherLocation currentEntry = await _locationService.GetCurrentLocationAsync();
 
                     if (currentEntry != null)
                     {
@@ -62,7 +62,7 @@ namespace MeteoApp.Core.ViewModels
                     else
                     {
                        
-                        Entries[index] = new Entry { Id = 0, CityName = "❌ Posizione non trovata (Riprova)", IsCurrentLocation = true };
+                        Entries[index] = new WeatherLocation { Id = 0, CityName = "❌ Posizione non trovata (Riprova)", IsCurrentLocation = true };
                     }
                 }
                 catch (HttpRequestException ex)
@@ -73,7 +73,7 @@ namespace MeteoApp.Core.ViewModels
                 {
                     System.Diagnostics.Debug.WriteLine($"Errore caricando la posizione: {ex.Message}");
                     
-                    Entries[index] = new Entry { Id = 0, CityName = "❌ Errore GPS (Tocca per riprovare)", IsCurrentLocation = true };
+                    Entries[index] = new WeatherLocation { Id = 0, CityName = "❌ Errore GPS (Tocca per riprovare)", IsCurrentLocation = true };
                 }
             }     
         }
@@ -81,8 +81,8 @@ namespace MeteoApp.Core.ViewModels
         public async Task LoadEntriesAsync()
         {
            
-            List<Entry> savedEntries = await _dbService.GetEntriesAsync();
-            Entry? gpsEntry = Entries.FirstOrDefault(e => e.IsCurrentLocation);
+            List<WeatherLocation> savedEntries = await _dbService.GetEntriesAsync();
+            WeatherLocation? gpsEntry = Entries.FirstOrDefault(e => e.IsCurrentLocation);
 
             Entries.Clear();
 
@@ -91,7 +91,7 @@ namespace MeteoApp.Core.ViewModels
                 Entries.Add(gpsEntry);
             }
 
-            foreach (Entry entry in savedEntries)
+            foreach (WeatherLocation entry in savedEntries)
             {
                 if (!entry.IsCurrentLocation)
                 {

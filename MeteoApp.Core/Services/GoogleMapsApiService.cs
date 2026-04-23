@@ -8,7 +8,7 @@ namespace MeteoApp.Core.Services
 {
     public class GoogleMapsApiService(HttpClient httpClient) : IGoogleMapsApiService
     {
-        private const string ApiKey = "AIzaSyBnllCmyOdSttoFZQbO_2NALMKGtPcUxMo";
+        private const string ApiKey = "API_KEY";
 
 
 

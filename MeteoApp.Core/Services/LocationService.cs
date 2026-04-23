@@ -9,7 +9,7 @@ namespace MeteoApp.Core.Services
     {
         public class LocationService(IGpsService gpsService, IGoogleMapsApiService googleApi) : ILocationService
         {
-            public async Task<Entry> GetCurrentLocationAsync()
+            public async Task<WeatherLocation> GetCurrentLocationAsync()
             {
                
                 var coords = await gpsService.GetDeviceCoordinatesAsync();
@@ -21,7 +21,7 @@ namespace MeteoApp.Core.Services
            
                 string cityName = await googleApi.GetCityNameAsync(lat, lon);
 
-                return new Entry
+                return new WeatherLocation
                 {
                     CityName = cityName,
                     Latitude = lat,

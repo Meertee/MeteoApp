@@ -23,7 +23,7 @@ namespace MeteoApp.Core.Services
                 SQLitePCL.Batteries_V2.Init();
                 SQLiteConnectionString options = new (_dbPath, true, key: _dbPassword);
                 _database = new SQLiteAsyncConnection(options);
-                await _database.CreateTableAsync<Entry>();
+                await _database.CreateTableAsync<WeatherLocation>();
 
             }catch(Exception ex)
             {
@@ -34,13 +34,13 @@ namespace MeteoApp.Core.Services
 
         }
 
-        public async Task<List<Entry>> GetEntriesAsync()
+        public async Task<List<WeatherLocation>> GetEntriesAsync()
         {
             await Init();
-            return await _database!.Table<Entry>().ToListAsync();
+            return await _database!.Table<WeatherLocation>().ToListAsync();
         }
 
-        public async Task<int> SaveEntryAsync(Entry entry)
+        public async Task<int> SaveEntryAsync(WeatherLocation entry)
         {
             //cambia id poi
             await Init();
@@ -50,7 +50,7 @@ namespace MeteoApp.Core.Services
                 return await _database!.InsertAsync(entry);
         }
 
-        public async Task<int> DeleteEntryAsync(Entry entry)
+        public async Task<int> DeleteEntryAsync(WeatherLocation entry)
         {
             await Init();
             return await _database!.DeleteAsync(entry);

@@ -5,7 +5,7 @@ namespace MeteoApp.Core.Services
 {
     public interface ILocationService
     {
-        Task<Entry> GetCurrentLocationAsync();
+        Task<WeatherLocation> GetCurrentLocationAsync();
         Task<string> GetCityNameAsync(double latitude, double longitude);
 
         Task<List<GooglePlacePrediction>> GetSuggestionsAsync(string query);

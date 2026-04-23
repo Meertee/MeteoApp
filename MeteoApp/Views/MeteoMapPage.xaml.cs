@@ -6,7 +6,7 @@ using MeteoApp.Services;
 using Microsoft.Maui.Controls.Maps;
 using Microsoft.Maui.Maps;
 using System.Runtime.Versioning;
-using ModelEntry = MeteoApp.Core.Models.Entry;
+using ModelEntry = MeteoApp.Core.Models.WeatherLocation;
 
 namespace MeteoApp.Views;
 // il pachetto di prima
@@ -40,11 +40,11 @@ public partial class MeteoMapPage : ContentPage
         {
             var result = await _viewModel.LoadCurrentLocationAsync();
             if (result.HasValue)
-                _mapService.CenterAndPin(myMap, new Location(result.Value.Latitude, result.Value.Longitude), result.Value.CityName);
+                _mapService.CenterAndPin(myMap, new Microsoft.Maui.Devices.Sensors.Location(result.Value.Latitude, result.Value.Longitude), result.Value.CityName);
         }
         else
         {
-            _mapService.CenterAndPin(myMap, new Location(_viewModel.CityEntry.Latitude, _viewModel.CityEntry.Longitude), _viewModel.CityEntry.CityName);
+            _mapService.CenterAndPin(myMap, new Microsoft.Maui.Devices.Sensors.Location(_viewModel.CityEntry.Latitude, _viewModel.CityEntry.Longitude), _viewModel.CityEntry.CityName);
         }
     }
     private async void OnMapClicked(object sender, MapClickedEventArgs e)
@@ -67,7 +67,7 @@ public partial class MeteoMapPage : ContentPage
             if (coords.HasValue)
             {
 
-                _mapService.CenterAndPin(myMap, new Location(coords.Value.Latitude, coords.Value.Longitude), prediction.Description);
+                _mapService.CenterAndPin(myMap, new Microsoft.Maui.Devices.Sensors.Location(coords.Value.Latitude, coords.Value.Longitude), prediction.Description);
             }
         }
         ((CollectionView)sender).SelectedItem = null; 

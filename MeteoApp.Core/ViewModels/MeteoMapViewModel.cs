@@ -1,9 +1,6 @@
 ﻿using MeteoApp.Core.Models;
 using MeteoApp.Core.Services;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace MeteoApp.Core.ViewModels
 {
@@ -13,8 +10,8 @@ namespace MeteoApp.Core.ViewModels
         private readonly ILocationService _locationService = locationService;
         private readonly DatabaseService _dbService = dbService;
         public ISearchHandler SearchManager { get; } = searchHandler;
-        private Entry _cityEntry = new();
-        public Entry CityEntry
+        private WeatherLocation _cityEntry = new();
+        public WeatherLocation CityEntry
         {
             get => _cityEntry;
             set
@@ -62,11 +59,9 @@ namespace MeteoApp.Core.ViewModels
             _isSelectingSuggestion = true;
             SearchText = prediction.Description;
             SearchManager.Clear();
-            //Pulizia
             _isSelectingSuggestion = false;
      
 
-            //tupla 
             (double Latitude, double Longitude)? coords = await _locationService.GetCoordinatesForCityAsync(prediction.Description);
 
             if (coords.HasValue)
@@ -91,7 +86,7 @@ namespace MeteoApp.Core.ViewModels
         public async Task<(double Latitude, double Longitude, string CityName)?> LoadCurrentLocationAsync()
         {
            
-            Entry currentGpsEntry = await _locationService.GetCurrentLocationAsync();
+            WeatherLocation currentGpsEntry = await _locationService.GetCurrentLocationAsync();
 
             if (currentGpsEntry != null)
             {

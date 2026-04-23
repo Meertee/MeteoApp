@@ -1,30 +1,45 @@
-﻿namespace MeteoApp;
+﻿using MeteoApp.Core.Models;
+using MeteoApp.Core.Services;
 
-using Microsoft.Maui.Controls;
-using ModelEntry = MeteoApp.Core.Models.Entry;
+namespace MeteoApp;
 
-[QueryProperty(nameof(Entry), "Entry")]
+[QueryProperty(nameof(PassedEntry), "WeatherLocation")]
 public partial class MeteoItemPage : ContentPage
 {
-    private ModelEntry? _passedEntry;
-    public ModelEntry? PassedEntry
+    private readonly WeatherService _weatherService;
+    private readonly DatabaseService _dbService;
+
+    private WeatherLocation? _passedEntry;
+    public WeatherLocation? PassedEntry
     {
         get => _passedEntry;
         set
         {
             _passedEntry = value;
-            OnPropertyChanged();
-
-            //Valori
             BindingContext = _passedEntry;
+            OnPropertyChanged();
         }
     }
 
-    public MeteoItemPage()
+    public MeteoItemPage(WeatherService weatherService, DatabaseService dbService)
     {
         InitializeComponent();
-        
+        _weatherService = weatherService;
+        _dbService = dbService;
     }
 
-    
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (PassedEntry != null)
+        {
+            // Fetch latest weather and save to DB
+            await _weatherService.RefreshEntryWeatherAsync(PassedEntry, _dbService);
+
+            // Refresh the BindingContext to show the new temperature
+            BindingContext = null;
+            BindingContext = PassedEntry;
+        }
+    }
 }

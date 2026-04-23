@@ -8,30 +8,30 @@
         <ToolbarItem Text="Add" Clicked="OnItemAdded" />
     </ContentPage.ToolbarItems>
 
-    <CollectionView x:Name="zlistView" 
-                    Margin="20" 
+    <CollectionView x:Name="SavedLocations"
+                    Margin="10"
                     SelectionMode="Single"
                     SelectionChanged="OnListSelectionChanged" 
                     ItemsSource="{Binding Entries}">
         <CollectionView.ItemTemplate>
             <DataTemplate>
-                <Grid Margin="20,10,0,10" ColumnDefinitions="*, Auto">
-
-                    <Label Grid.Column="0"
-               Text="{Binding CityName}" 
-               VerticalTextAlignment="Center" 
-               FontSize="18" 
-               FontAttributes="Bold" />
-
-                    <Image Grid.Column="1"
-               Source="check.png" 
-               HorizontalOptions="End" 
-               IsVisible="{Binding Done}" 
-               WidthRequest="24"
-               HeightRequest="24" />
-                </Grid>
+                <Border Margin="0,5,0,5"
+                        Padding="30,35,30,35"
+                        StrokeShape="RoundRectangle 15">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label x:Name="Location"
+                           Grid.Column="0"
+                           Text="{Binding CityName}" 
+                           VerticalTextAlignment="Center" 
+                           FontSize="18" 
+                           FontAttributes="Bold"/>
+                        <Image Grid.Column="1"
+                           Source="check.png" 
+                           HorizontalOptions="End" 
+                           IsVisible="{Binding Done}"/>
+                        </Grid>
+                </Border>
             </DataTemplate>
         </CollectionView.ItemTemplate>
     </CollectionView>
-
 </ContentPage>

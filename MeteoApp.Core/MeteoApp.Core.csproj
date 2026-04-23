@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="sqlite-net-sqlcipher" Version="1.9.172" />
+    <PackageReference Include="System.Net.Http.Json" Version="10.0.7" />
   </ItemGroup>
 
 </Project>

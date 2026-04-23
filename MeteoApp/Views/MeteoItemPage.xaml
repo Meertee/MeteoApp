@@ -12,9 +12,8 @@
                HorizontalOptions="Center" 
                VerticalOptions="Start" />
 
-        <Label Text="{Binding Id, StringFormat='ID Database: {0}'}"
-               FontSize="20"
-               TextColor="Gray"
+        <Label Text="{Binding CurrentTemp, StringFormat='{0:F1}°C'}"
+               FontSize="32"
                HorizontalOptions="Center" />
 
         <Label Text="{Binding Latitude, StringFormat='Latitudine: {0:F4}'}"

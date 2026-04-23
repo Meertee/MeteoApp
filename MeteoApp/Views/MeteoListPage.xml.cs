@@ -2,7 +2,7 @@
 using MeteoApp.Core.ViewModels;
 using Microsoft.Maui.Controls;
 using System.Runtime.Versioning;
-using ModelEntry = MeteoApp.Core.Models.Entry;
+using ModelEntry = MeteoApp.Core.Models.WeatherLocation;
 
 namespace MeteoApp.Views;
 
@@ -46,35 +46,16 @@ public partial class MeteoListPage : ContentPage
 
     private async void OnListSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (e.CurrentSelection.Count > 0 && e.CurrentSelection[0] is ModelEntry selectedEntry)
+        if (e.CurrentSelection.FirstOrDefault() is WeatherLocation selectedEntry)
         {
-            CollectionView list = (CollectionView)sender;
-            list.SelectedItem = null;
+            var navigationParameter = new Dictionary<string, object>
+        {
+            { "WeatherLocation", selectedEntry }
+        };
 
+            await Shell.Current.GoToAsync(nameof(MeteoItemPage), navigationParameter);
 
-            // CONTROLLO: È la voce del GPS?
-            if (selectedEntry.IsCurrentLocation)
-            {
-                // prende il modello dal binding recupera il modello collegato alla view
-                MeteoListViewModel viewModel = (MeteoListViewModel)BindingContext;
-
-                // Facciamo partire il metodo che abbiamo appena creato!
-                if (viewModel != null)
-                {
-                    await viewModel.FetchLocationOnClickAsync();
-                }
-            }
-            else
-            {
-                // Se clicco una città già esistente, vado ai DETTAGLI, non alla mappa
-                Dictionary<string, object> navigationParameter = new()
-                {
-                { "Entry", selectedEntry }
-            };
-
-                await Shell.Current.GoToAsync("entrydetails", navigationParameter);
-            }
-
+            ((CollectionView)sender).SelectedItem = null;
         }
     }
 
@@ -98,7 +79,7 @@ public partial class MeteoListPage : ContentPage
        
         Dictionary<string, object> navigationParameter = new()
         {
-        { "Entry", newEntry }
+        { "WeatherLocation", newEntry }
     };
 
        
