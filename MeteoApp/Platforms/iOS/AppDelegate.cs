@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace Template
+namespace MeteoApp
 {
     [Register("AppDelegate")]
     public class AppDelegate : MauiUIApplicationDelegate

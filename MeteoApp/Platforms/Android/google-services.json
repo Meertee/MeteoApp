@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "716101000119",
+    "project_id": "meteoapp-supsi",
+    "storage_bucket": "meteoapp-supsi.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716101000119:android:1cce9146bc68b52784a632",
+        "android_client_info": {
+          "package_name": "ch.supsi.meteoapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtJzoZ-CgoAMp1vRAKTpqCiDQzRQ9cxE8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

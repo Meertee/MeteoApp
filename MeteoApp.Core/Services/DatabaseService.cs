@@ -1,11 +1,6 @@
 ﻿using MeteoApp.Core.Models;
 using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-
-//sqlite-net-sqlcipher
 namespace MeteoApp.Core.Services
 {
     public class DatabaseService(string dbPath, string dbPassword)
@@ -28,7 +23,7 @@ namespace MeteoApp.Core.Services
             }catch(Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"\n\n ---> ERRORE GRAVE DATABASE: {ex.Message} \n\n");
-                throw; // Rilanciamo l'errore
+                throw; 
             }
 
 
@@ -42,7 +37,6 @@ namespace MeteoApp.Core.Services
 
         public async Task<int> SaveEntryAsync(WeatherLocation entry)
         {
-            //cambia id poi
             await Init();
             if (entry.Id != 0)
                 return await _database!.UpdateAsync(entry);
@@ -55,6 +49,12 @@ namespace MeteoApp.Core.Services
             await Init();
             return await _database!.DeleteAsync(entry);
         }
-
+        public async Task<WeatherLocation> GetEntryAsync(int id)
+        {
+            await Init();
+            return await _database!.Table<WeatherLocation>()
+                                   .Where(i => i.Id == id)
+                                   .FirstOrDefaultAsync();
+        }
     }
 }

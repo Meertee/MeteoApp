@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MeteoApp.Core.Models
+﻿namespace MeteoApp.Core.Models
 {
     public class GooglePlacePrediction
     {

@@ -1,7 +1,5 @@
 ﻿using MeteoApp.Core.Models;       
 using MeteoApp.Core.ViewModels;
-using Microsoft.Maui.Controls;
-using System.Runtime.Versioning;
 using ModelEntry = MeteoApp.Core.Models.WeatherLocation;
 
 namespace MeteoApp.Views;
@@ -10,7 +8,6 @@ namespace MeteoApp.Views;
 public partial class MeteoListPage : ContentPage
 {
     public Dictionary<string, Type> Routes { get; private set; } = [];
-
 
     protected override async void OnAppearing()
     {
@@ -24,6 +21,17 @@ public partial class MeteoListPage : ContentPage
            
             await viewModel.LoadEntriesAsync();
         }
+#if ANDROID
+        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Tiramisu)
+        {
+            var status = await Permissions.RequestAsync<Permissions.PostNotifications>();
+            System.Diagnostics.Debug.WriteLine($"Notification permission: {status}");
+        }
+
+        await Plugin.Firebase.CloudMessaging.CrossFirebaseCloudMessaging.Current.CheckIfValidAsync();
+        var token = await Plugin.Firebase.CloudMessaging.CrossFirebaseCloudMessaging.Current.GetTokenAsync();
+        System.Diagnostics.Debug.WriteLine($"FCM Token: {token}");
+#endif
     }
 
     public MeteoListPage(MeteoListViewModel viewModel)
