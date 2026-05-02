@@ -1,5 +1,5 @@
-﻿using MeteoApp.Core.Services;
-using MeteoApp.Core.Services.MeteoApp.Core.Services;
+﻿using MeteoApp.Core.Interfaces;
+using MeteoApp.Core.Services;
 using MeteoApp.Core.ViewModels;
 using MeteoApp.Services;
 using MeteoApp.Views;
@@ -17,10 +17,6 @@ namespace MeteoApp
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
-            
-            string weatherApiKey = "API_KEY";
-            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "MeteoSecure.db3");
-            string dbPassword = "LinkPrime1234567";
 
             builder
                 .UseMauiApp<App>()
@@ -34,26 +30,31 @@ namespace MeteoApp
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
-
+#pragma warning disable CA1416 // Validate platform compatibility
+            builder.Services.AddMauiBlazorWebView();
+#pragma warning restore CA1416 // Validate platform compatibility
+#if DEBUG
+            builder.Services.AddBlazorWebViewDeveloperTools();
+#endif
             // Registrazione Servizi
-            builder.Services.AddSingleton<DatabaseService>(new DatabaseService(dbPath, dbPassword));
+            builder.Services.AddSingleton<IDatabaseService, DatabaseService>();
+            builder.Services.AddSingleton<ICurrentLocationService, LocationService>();
+            builder.Services.AddSingleton<ILocationPermissionService, LocationService>();
+            builder.Services.AddSingleton<IWeatherApiService, WeatherService>();
+            builder.Services.AddSingleton<IWeatherStateService,WeatherStateService>();
+            builder.Services.AddSingleton<ISearchLocationSuggestionService, SearchLocationSuggestionService>();
             builder.Services.AddSingleton<HttpClient>();
-            builder.Services.AddSingleton<IGpsService, GpsService>();
-            builder.Services.AddSingleton<IGoogleMapsApiService, GoogleMapsApiService>();
-            builder.Services.AddSingleton<ILocationService, LocationService>();
-            builder.Services.AddTransient<MeteoMapPage>();
-            builder.Services.AddTransient<MeteoMapViewModel>();
-            builder.Services.AddTransient<ISearchHandler, CitySearchHandler>();
-            builder.Services.AddSingleton<IMapService, MauiMapService>();
-            builder.Services.AddSingleton<WeatherService>(new WeatherService(weatherApiKey));
+            builder.Services.AddSingleton<INotificationPermissionService, NotificationService>();
 
+            // Registrazione ViewModels
+            builder.Services.AddTransient<MainViewModel>();
+            builder.Services.AddTransient<WeatherLocationViewModel>();
+            builder.Services.AddTransient<SearchLocationViewModel>();
 
-            // Registrazione ViewModels e Views
-            builder.Services.AddTransient<MeteoListViewModel>();
-            builder.Services.AddTransient<MeteoListPage>();
-
-            builder.Services.AddTransient<MeteoItemViewModel>();
-            builder.Services.AddTransient<MeteoItemPage>();
+            // Registrazione Views
+            builder.Services.AddTransient<MainPage>();
+            builder.Services.AddTransient<WeatherLocationPage>();
+            builder.Services.AddTransient<SearchLocationPage>();
 
 #if ANDROID || IOS
             builder.RegisterFirebaseServices();

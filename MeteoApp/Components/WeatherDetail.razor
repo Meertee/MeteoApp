@@ -1,0 +1,93 @@
+﻿@using MeteoApp.Core.Models
+@using MeteoApp.Core.Interfaces
+@inject IWeatherStateService WeatherState
+@implements IDisposable
+
+<div class="weather-container">
+    @if (WeatherState.CurrentLocation == null)
+    {
+        <p style="color:white; text-align:center; padding-top:40px;">Loading...</p>
+    }
+    else
+    {
+        var loc = WeatherState.CurrentLocation;
+
+        <div>
+            <div class="city-name">@loc.CityName, @loc.Country</div>
+            <div class="description">@loc.WeatherDescription</div>
+        </div>
+
+        <div class="current-temp">@loc.CurrentTemp.ToString("F0")°</div>
+        <div class="feels-like">Feels like @loc.FeelsLike.ToString("F0")°</div>
+
+        <div class="min-max">
+            <div class="temp-block">
+                <div class="temp-label">MIN</div>
+                <div class="temp-value">@loc.MinimumTemp.ToString("F0")°</div>
+            </div>
+            <div class="temp-block">
+                <div class="temp-label">MAX</div>
+                <div class="temp-value">@loc.MaximumTemp.ToString("F0")°</div>
+            </div>
+        </div>
+
+        <div class="details-grid">
+            <div class="detail-card">
+                <div class="detail-label">Humidity</div>
+                <div class="detail-value">@loc.Humidity.ToString("F0")<span class="detail-unit">%</span></div>
+            </div>
+            <div class="detail-card">
+                <div class="detail-label">Wind</div>
+                <div class="detail-value">@loc.WindSpeed.ToString("F1")<span class="detail-unit"> m/s</span></div>
+            </div>
+            <div class="detail-card">
+                <div class="detail-label">Pressure</div>
+                <div class="detail-value">@loc.Pressure.ToString("F0")<span class="detail-unit"> hPa</span></div>
+            </div>
+            <div class="detail-card">
+                <div class="detail-label">Visibility</div>
+                <div class="detail-value">@((loc.Visibility / 1000.0).ToString("F1"))<span class="detail-unit"> km</span></div>
+            </div>
+            <div class="detail-card">
+                <div class="detail-label">Clouds</div>
+                <div class="detail-value">@loc.CloudCoverage<span class="detail-unit">%</span></div>
+            </div>
+            <div class="detail-card">
+                <div class="detail-label">Wind Gust</div>
+                <div class="detail-value">@loc.WindGust.ToString("F1")<span class="detail-unit"> m/s</span></div>
+            </div>
+        </div>
+
+        <div class="sun-row">
+            <div class="temp-block">
+                <div class="temp-label">Sunrise</div>
+                <div class="temp-value" style="font-size:18px;">
+                    @DateTimeOffset.FromUnixTimeSeconds(loc.Sunrise).ToLocalTime().ToString("HH:mm")
+                </div>
+            </div>
+            <div class="temp-block">
+                <div class="temp-label">Sunset</div>
+                <div class="temp-value" style="font-size:18px;">
+                    @DateTimeOffset.FromUnixTimeSeconds(loc.Sunset).ToLocalTime().ToString("HH:mm")
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        WeatherState.OnLocationChanged += OnStateChanged;
+    }
+
+    private void OnStateChanged()
+    {
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        WeatherState.OnLocationChanged -= OnStateChanged;
+    }
+}

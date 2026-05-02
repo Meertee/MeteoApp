@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-android</TargetFrameworks>
@@ -66,12 +66,14 @@
 
 	<ItemGroup>
 	  <AndroidResource Remove="Platforms\Android\Resources\values\strings.xml" />
+	  <AndroidResource Remove="Platforms\Android\Resources\values\styles.xml" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.51" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.60" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.7" />
-		<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="10.0.51" />
+		<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="10.0.60" />
+		<PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.60" />
 		<PackageReference Include="Plugin.Firebase.Auth" Version="5.0.1" />
 		<PackageReference Include="Plugin.Firebase.CloudMessaging" Version="4.0.1" />
 	</ItemGroup>
@@ -84,20 +86,26 @@
 	  <Compile Update="Platforms\iOS\FirebaseInitializer.cs">
 	    <ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
 	  </Compile>
+	  <Compile Update="Views\SearchLocationPage.xaml.cs">
+	    <DependentUpon>SearchLocationPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Views\MeteoItemPage.xaml">
+	  <MauiXaml Update="Views\MainPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\MeteoListPage.xaml">
+	  <MauiXaml Update="Views\SearchLocationPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\MeteoMapPage.xaml">
+	  <MauiXaml Update="Views\WeatherLocationPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
 		<GoogleServicesJson Include="Platforms\Android\google-services.json" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Update="Microsoft.AspNetCore.Components.WebView.Maui" Version="10.0.60" />
 	</ItemGroup>
 </Project>

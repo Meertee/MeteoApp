@@ -1,60 +1,93 @@
-﻿using MeteoApp.Core.Models;
+﻿using MeteoApp.Core.Interfaces;
+using MeteoApp.Core.Models;
 using SQLite;
 
 namespace MeteoApp.Core.Services
 {
-    public class DatabaseService(string dbPath, string dbPassword)
+    public class DatabaseService : IDatabaseService
     {
-
         private SQLiteAsyncConnection? _database;
-        private readonly string _dbPath = dbPath;
-        private readonly string _dbPassword = dbPassword;
-
-        private async Task Init()
+        private readonly string _dbPath;
+        
+        public DatabaseService()
         {
-            if (_database != null) return;
-            try
-            {
-                SQLitePCL.Batteries_V2.Init();
-                SQLiteConnectionString options = new (_dbPath, true, key: _dbPassword);
-                _database = new SQLiteAsyncConnection(options);
-                await _database.CreateTableAsync<WeatherLocation>();
-
-            }catch(Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"\n\n ---> ERRORE GRAVE DATABASE: {ex.Message} \n\n");
-                throw; 
-            }
-
-
+            string basePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            _dbPath = Path.Combine(basePath, "MeteoApp.db3");
         }
 
-        public async Task<List<WeatherLocation>> GetEntriesAsync()
+        public async Task InitializeAsync()
         {
-            await Init();
+            if (_database != null) return;
+            string key = "SuperSecretKey";
+            var options = new SQLiteConnectionString(_dbPath, true, key:  key);
+            _database = new SQLiteAsyncConnection(options);
+            await _database.CreateTableAsync<WeatherLocation>();
+        }
+
+        public async Task<int> DeleteLocationAsync(WeatherLocation location)
+        {
+            await InitializeAsync();
+            return await _database!.DeleteAsync(location);
+        }
+
+        public async Task<List<WeatherLocation>> GetAllLocationsAsync()
+        {
+            await InitializeAsync();
             return await _database!.Table<WeatherLocation>().ToListAsync();
         }
 
-        public async Task<int> SaveEntryAsync(WeatherLocation entry)
+        public async Task<WeatherLocation> GetCurrentLocationAsync()
         {
-            await Init();
-            if (entry.Id != 0)
-                return await _database!.UpdateAsync(entry);
-            else
-                return await _database!.InsertAsync(entry);
+            await InitializeAsync();
+            return await _database!.Table<WeatherLocation>().Where(i => i.IsCurrentLocation).FirstOrDefaultAsync();
         }
 
-        public async Task<int> DeleteEntryAsync(WeatherLocation entry)
+        public async Task<WeatherLocation> GetLocationAsync(int id)
         {
-            await Init();
-            return await _database!.DeleteAsync(entry);
+            await InitializeAsync();
+            return await _database!.Table<WeatherLocation>().Where(i => i.Id == id).FirstOrDefaultAsync();
         }
-        public async Task<WeatherLocation> GetEntryAsync(int id)
+
+        public async Task<int> SaveLocationAsync(WeatherLocation location)
         {
-            await Init();
-            return await _database!.Table<WeatherLocation>()
-                                   .Where(i => i.Id == id)
-                                   .FirstOrDefaultAsync();
+            await InitializeAsync();
+            try
+            {
+                if (location.IsCurrentLocation)
+                {
+                    var existingCurrentLocation = await GetCurrentLocationAsync();
+                    if (existingCurrentLocation != null && existingCurrentLocation.Id != location.Id)
+                    {
+                        existingCurrentLocation.IsCurrentLocation = false;
+                        await _database!.UpdateAsync(existingCurrentLocation);
+                    }
+                }
+                if (location.Id != 0)
+                {
+                    return await _database!.UpdateAsync(location);
+                }
+                else
+                {
+                    var existing = await _database!.Table<WeatherLocation>()
+                            .Where(l => l.CityName == location.CityName)
+                            .FirstOrDefaultAsync();
+
+                    if (existing != null)
+                    {
+                        location.Id = existing.Id;
+                        return await _database!.UpdateAsync(location);
+                    }
+                    else
+                    {
+                        return await _database!.InsertAsync(location);
+                    }
+                }
+            }
+            catch (SQLiteException ex) when (ex.Message.Contains("Constraint") || ex.Message.Contains("UNIQUE"))
+            {
+                System.Diagnostics.Debug.WriteLine($"Duplicate entry blocked: {location.CityName}");
+                throw new InvalidOperationException($"The city '{location.CityName}' is already saved.");
+            }
         }
     }
 }

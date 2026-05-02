@@ -1,0 +1,103 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #0F0F13;
+    color: white;
+    font-family: -apple-system, sans-serif;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.weather-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding-top: 40px;
+}
+
+.city-name {
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.description {
+    font-size: 18px;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.current-temp {
+    font-size: 96px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.feels-like {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+}
+
+.min-max {
+    display: flex;
+    gap: 40px;
+}
+
+.temp-block {
+    text-align: center;
+}
+
+.temp-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    font-weight: bold;
+}
+
+.temp-value {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.detail-card {
+    background: rgba(255,255,255,0.07);
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+}
+
+.detail-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.detail-value {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.detail-unit {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+}
+
+.sun-row {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+}

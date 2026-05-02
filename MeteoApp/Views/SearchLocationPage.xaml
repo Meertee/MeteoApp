@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
+             x:Class="MeteoApp.Views.SearchLocationPage"
+             Title="Trova Località"
+             BackgroundColor="#0F0F13">
+
+    <Grid RowDefinitions="Auto, *, Auto">
+
+        <VerticalStackLayout Grid.Row="0" Margin="15,20,15,15" ZIndex="2">
+            <Border BackgroundColor="#1E1E26" 
+                    StrokeThickness="1"
+                    Stroke="#33FFFFFF"
+                    HeightRequest="50">     
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10" />
+                </Border.StrokeShape>
+                <SearchBar x:Name="locationSearchBar"
+                       Text="{Binding SearchText}" 
+                       Placeholder="Search" 
+                       TextChanged="OnSearchTextChanged" 
+                       TextColor="White"
+                       PlaceholderColor="#99FFFFFF"
+                       CancelButtonColor="White"
+                       SearchButtonPressed="OnSearchButtonPressed"
+                       BackgroundColor="Transparent" />
+            </Border>
+        </VerticalStackLayout>
+
+        <Grid Grid.Row="1">
+            <maps:Map x:Name="myMap" 
+                  MapType="Street" 
+                  IsShowingUser="True"
+                  MapClicked="OnMapClicked" />
+
+            <CollectionView x:Name="suggestionsView"
+                        ItemsSource="{Binding Suggestions}"
+                        IsVisible="{Binding IsSuggestionsVisible}"
+                        SelectionMode="Single"
+                        BackgroundColor="#1E1E26"
+                        MaximumHeightRequest="250"
+                        VerticalOptions="Start"
+                        Margin="20,0"
+                        ZIndex="5"
+                        SelectionChanged="OnSuggestionSelected">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="15"
+                              HeightRequest="50">
+                            <Label Text="{Binding Name}" 
+                                   TextColor="White"
+                                   VerticalOptions="Center"
+                                   FontSize="15" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+        <Button Grid.Row="2" 
+            Text="Salva Località" 
+            Clicked="OnSaveClicked"
+            BackgroundColor="#3498db"
+            TextColor="White"
+            FontAttributes="Bold"
+            CornerRadius="25"
+            HeightRequest="50"
+            Margin="30,20,30,40" />
+    </Grid>
+</ContentPage>
