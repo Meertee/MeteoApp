@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace Template
+namespace MeteoApp
 {
     public class Program
     {

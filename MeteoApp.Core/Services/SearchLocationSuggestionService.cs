@@ -8,7 +8,7 @@ namespace MeteoApp.Core.Services
     public class SearchLocationSuggestionService : ISearchLocationSuggestionService
     {
         private readonly HttpClient _httpClient;
-        private const string ApiKey = "API_KEY"; 
+        private const string ApiKey = "AIzaSyDI83HHPHTFzm-7NITgpqVUJv8xsAG9FwU"; 
 
         public SearchLocationSuggestionService()
         {

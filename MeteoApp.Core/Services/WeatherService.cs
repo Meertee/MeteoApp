@@ -9,7 +9,7 @@ namespace MeteoApp.Core.Services
     public class WeatherService : IWeatherApiService
     {
         private readonly HttpClient _httpClient;
-        private const string ApiKey = "API_KEY";
+        private const string ApiKey = "a8cd7e74358a3e4179b66a36f1f419fe";
 
         public WeatherService()
         {
