@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MeteoApp.Views.SettingsPage"
+             Title="Settings">
+
+    <VerticalStackLayout Padding="20" Spacing="20">
+        <Label Text="Weather Preferences" FontSize="22" FontAttributes="Bold" />
+
+        <Label Text="Choose temperature unit:" FontSize="16" />
+
+        <HorizontalStackLayout Spacing="15" VerticalOptions="Center">
+            <Label Text="Celsius (°C)" VerticalOptions="Center" />
+
+            <Switch IsToggled="{Binding IsFahrenheit}" />
+
+            <Label Text="Fahrenheit (°F)" VerticalOptions="Center" />
+        </HorizontalStackLayout>
+
+    </VerticalStackLayout>
+</ContentPage>

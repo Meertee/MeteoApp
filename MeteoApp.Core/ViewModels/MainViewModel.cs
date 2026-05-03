@@ -4,20 +4,28 @@ using CommunityToolkit.Mvvm.Input;
 using MeteoApp.Core.Interfaces;
 using MeteoApp.Core.Models;
 using MeteoApp.Core.Services.Interfaces.AppWrite;
+using MeteoApp.Core.Services.Interfaces.Preferences;
 using System.Collections.ObjectModel;
 
 namespace MeteoApp.Core.ViewModels
 {
     public partial class MainViewModel(
+        INavigationService navigationService,
         ILocationManager locationManager,
         IDatabaseService dbService,
         ILocationPermissionService locationPermissionService,
         ICurrentLocationService currentLocationService,
         IWeatherApiService weatherApiService,
+        ISettingsService settingsService,
         INotificationPermissionService notificationPermissionService) : ObservableObject
     {
         private bool _isInitialized = false;
         public ObservableCollection<WeatherLocation> Locations { get; } = [];
+
+     
+
+        [ObservableProperty]
+        private string _temperatureUnit = string.Empty;
 
         public async Task InitializeAsync()
         {
@@ -31,16 +39,33 @@ namespace MeteoApp.Core.ViewModels
             await LoadLocationsAsync();
         }
 
+
         [RelayCommand]
         public async Task LoadLocationsAsync()
         {
+            // 2. Ogni volta che carichi la lista, aggiorniamo il simbolo leggendo le impostazioni
+            TemperatureUnit = settingsService.GetTemperatureUnitString();
+
             List<WeatherLocation> savedLocations = await dbService.GetAllLocationsAsync();
             Locations.Clear();
             foreach (WeatherLocation location in savedLocations)
             {
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] Loaded: Id={location.Id}, City={location.CityName}");
                 Locations.Add(location);
             }
+        }
+
+        [RelayCommand]
+        public async Task GoToSearchAsync()
+        {
+           
+            await navigationService.NavigateToAsync("SearchLocationPage");
+        }
+
+        [RelayCommand]
+        public async Task GoToSettingsAsync()
+        {
+           
+            await navigationService.NavigateToAsync("SettingsPage");
         }
 
         private async Task FetchCurrentLocation()

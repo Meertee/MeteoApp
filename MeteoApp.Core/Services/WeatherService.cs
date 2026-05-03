@@ -1,5 +1,7 @@
 ﻿using MeteoApp.Core.Interfaces;
 using MeteoApp.Core.Models;
+using MeteoApp.Core.Services.Interfaces.Preferences;
+using System.ComponentModel.Design;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using static MeteoApp.Core.Services.WeatherService;
@@ -9,16 +11,19 @@ namespace MeteoApp.Core.Services
     public class WeatherService : IWeatherApiService
     {
         private readonly HttpClient _httpClient;
+        private readonly ISettingsService _settingsService;
         private const string ApiKey = "a8cd7e74358a3e4179b66a36f1f419fe";
 
-        public WeatherService()
+        public WeatherService(ISettingsService settingsService)
         {
             _httpClient = new HttpClient();
+            _settingsService = settingsService;
         }
 
         public async Task<WeatherLocation?> GetWeatherLocationAsync(double latitude, double longitude)
         {
-            string url = $"https://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid={ApiKey}&units=metric";
+            string units = _settingsService.UseFahrenheit ? "imperial" : "metric";
+            string url = $"https://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid={ApiKey}&units={units}";
             try
             {
                 var response = await _httpClient.GetFromJsonAsync<OpenWeatherResponse>(url);

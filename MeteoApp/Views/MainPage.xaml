@@ -1,44 +1,50 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MeteoApp.Core.ViewModels;assembly=MeteoApp.Core"
              x:Class="MeteoApp.Views.MainPage"
              Title="Meteo"
              BackgroundColor="#0F0F13">
 
+ 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="+ Add" 
-                     Clicked="OnAddLocationClicked"/>
+                     Command="{Binding GoToSearchCommand}"/>
+        <ToolbarItem Text="Settings" 
+                     Command="{Binding GoToSettingsCommand}" />
     </ContentPage.ToolbarItems>
 
-    <CollectionView Margin="16,8,16,16"
-                    SelectionMode="Single"
-                    SelectionChanged="OnListSelectionChanged"
-                    ItemsSource="{Binding Locations}">
+
+
+
+    <CollectionView SelectionMode="Single"
+                        SelectionChanged="OnListSelectionChanged"
+                        ItemsSource="{Binding Locations}">
 
         <CollectionView.Header>
             <Label Text="Meteo"
-                   FontSize="28"
-                   FontAttributes="Bold"
-                   TextColor="White"
-                   Margin="4,16,0,16"/>
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       Margin="4,16,0,16"/>
         </CollectionView.Header>
 
         <CollectionView.ItemTemplate>
             <DataTemplate>
                 <Grid Padding="0,5,0,5">
                     <Border Padding="18,16,18,16"
-                            StrokeShape="RoundRectangle 18"
-                            Stroke="Transparent">
+                                StrokeShape="RoundRectangle 18"
+                                Stroke="Transparent">
 
                         <Border.Triggers>
                             <DataTrigger TargetType="Border"
-                                         Binding="{Binding IsCurrentLocation}"
-                                         Value="True">
+                                             Binding="{Binding IsCurrentLocation}"
+                                             Value="True">
                                 <Setter Property="Background" Value="#1D6EF5"/>
                             </DataTrigger>
                             <DataTrigger TargetType="Border"
-                                         Binding="{Binding IsCurrentLocation}"
-                                         Value="False">
+                                             Binding="{Binding IsCurrentLocation}"
+                                             Value="False">
                                 <Setter Property="Background" Value="#1A1A24"/>
                                 <Setter Property="Stroke" Value="#2A2A38"/>
                                 <Setter Property="StrokeThickness" Value="0.5"/>
@@ -48,35 +54,36 @@
                         <Grid ColumnDefinitions="*, Auto">
 
                             <VerticalStackLayout Grid.Column="0"
-                                                 Spacing="3"
-                                                 VerticalOptions="Center">
+                                                     Spacing="3"
+                                                     VerticalOptions="Center">
                                 <Label Text="CURRENT LOCATION"
-                                       FontSize="10"
-                                       FontAttributes="Bold"
-                                       TextColor="#99FFFFFF"
-                                       CharacterSpacing="1"
-                                       IsVisible="{Binding IsCurrentLocation}"/>
+                                           FontSize="10"
+                                           FontAttributes="Bold"
+                                           TextColor="#99FFFFFF"
+                                           CharacterSpacing="1"
+                                           IsVisible="{Binding IsCurrentLocation}"/>
                                 <Label Text="{Binding CityName}"
-                                       FontSize="17"
-                                       FontAttributes="Bold"
-                                       TextColor="White"/>
+                                           FontSize="17"
+                                           FontAttributes="Bold"
+                                           TextColor="White"/>
                                 <Label Text="{Binding WeatherDescription}"
-                                       FontSize="12"
-                                       TextColor="#99FFFFFF"/>
+                                           FontSize="12"
+                                           TextColor="#99FFFFFF"/>
                             </VerticalStackLayout>
 
                             <VerticalStackLayout Grid.Column="1"
-                                                 Spacing="2"
-                                                 VerticalOptions="Center"
-                                                 HorizontalOptions="End">
+                                                     Spacing="2"
+                                                     VerticalOptions="Center"
+                                                     HorizontalOptions="End">
                                 <Label FontSize="28"
-                                       FontAttributes="Bold"
-                                       TextColor="White"
-                                       HorizontalOptions="End">
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalOptions="End">
                                     <Label.FormattedText>
                                         <FormattedString>
                                             <Span Text="{Binding CurrentTemp, StringFormat='{0:F0}'}"/>
-                                            <Span Text="°"/>
+
+                                            <Span Text="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=TemperatureUnit}"/>
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>

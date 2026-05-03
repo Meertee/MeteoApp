@@ -1,10 +1,12 @@
 ﻿using MeteoApp.Core.Interfaces;
 using MeteoApp.Core.Services;
 using MeteoApp.Core.Services.Interfaces.AppWrite;
+using MeteoApp.Core.Services.Interfaces.Preferences;
 using MeteoApp.Core.ViewModels;
 using MeteoApp.Services;
 using MeteoApp.Views;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel.Design;
 using System.Runtime.Versioning;
 
 [assembly: SupportedOSPlatform("ios14.0")]
@@ -48,16 +50,20 @@ namespace MeteoApp
             builder.Services.AddSingleton<INotificationPermissionService, NotificationService>();
             builder.Services.AddSingleton<IAppwriteService, AppwriteService>();
             builder.Services.AddSingleton<ILocationManager, LocationManager>();
+            builder.Services.AddSingleton<ISettingsService, PreferencesService>();
+            builder.Services.AddSingleton<INavigationService, NavigationService>();
 
             // Registrazione ViewModels
             builder.Services.AddTransient<MainViewModel>();
             builder.Services.AddTransient<WeatherLocationViewModel>();
             builder.Services.AddTransient<SearchLocationViewModel>();
+            builder.Services.AddTransient<SettingsViewModel>();
 
             // Registrazione Views
             builder.Services.AddTransient<MainPage>();
             builder.Services.AddTransient<WeatherLocationPage>();
             builder.Services.AddTransient<SearchLocationPage>();
+            builder.Services.AddTransient<SettingsPage>();
 
 #if ANDROID || IOS
             builder.RegisterFirebaseServices();

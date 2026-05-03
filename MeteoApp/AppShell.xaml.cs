@@ -9,6 +9,7 @@ namespace MeteoApp
             InitializeComponent();
             Routing.RegisterRoute(nameof(WeatherLocationPage), typeof(WeatherLocationPage));
             Routing.RegisterRoute(nameof(SearchLocationPage), typeof(SearchLocationPage));
+            Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
         }
     }
 }
