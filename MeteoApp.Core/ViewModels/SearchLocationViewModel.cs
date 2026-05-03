@@ -2,11 +2,13 @@
 using CommunityToolkit.Mvvm.Input;
 using MeteoApp.Core.Interfaces;
 using MeteoApp.Core.Models;
+using MeteoApp.Core.Services.Interfaces.AppWrite;
 using System.Collections.ObjectModel;
 
 namespace MeteoApp.Core.ViewModels
 {
     public partial class SearchLocationViewModel(
+        ILocationManager locationManager,
         IDatabaseService dbService,
         IWeatherApiService weatherApiService,
         ISearchLocationSuggestionService searchSuggestionsService) : ObservableObject
@@ -56,7 +58,7 @@ namespace MeteoApp.Core.ViewModels
                     string.Equals(l.CityName?.Trim(), location.CityName?.Trim(), StringComparison.OrdinalIgnoreCase));
                 
                 location.IsCurrentLocation = existing?.IsCurrentLocation ?? false;
-                await dbService.SaveLocationAsync(location);
+                await locationManager.SaveLocationAsync(location); ;
             }
         }
     }

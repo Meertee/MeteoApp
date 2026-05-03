@@ -3,11 +3,13 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using MeteoApp.Core.Interfaces;
 using MeteoApp.Core.Models;
+using MeteoApp.Core.Services.Interfaces.AppWrite;
 using System.Collections.ObjectModel;
 
 namespace MeteoApp.Core.ViewModels
 {
     public partial class MainViewModel(
+        ILocationManager locationManager,
         IDatabaseService dbService,
         ILocationPermissionService locationPermissionService,
         ICurrentLocationService currentLocationService,
@@ -56,7 +58,7 @@ namespace MeteoApp.Core.ViewModels
                     if (currentLocation != null)
                     {
                         currentLocation.IsCurrentLocation = true;
-                        await dbService.SaveLocationAsync(currentLocation);
+                        await locationManager.SaveLocationAsync(currentLocation);
                     }
                 }
             }

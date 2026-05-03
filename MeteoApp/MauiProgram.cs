@@ -1,5 +1,6 @@
 ﻿using MeteoApp.Core.Interfaces;
 using MeteoApp.Core.Services;
+using MeteoApp.Core.Services.Interfaces.AppWrite;
 using MeteoApp.Core.ViewModels;
 using MeteoApp.Services;
 using MeteoApp.Views;
@@ -45,6 +46,8 @@ namespace MeteoApp
             builder.Services.AddSingleton<ISearchLocationSuggestionService, SearchLocationSuggestionService>();
             builder.Services.AddSingleton<HttpClient>();
             builder.Services.AddSingleton<INotificationPermissionService, NotificationService>();
+            builder.Services.AddSingleton<IAppwriteService, AppwriteService>();
+            builder.Services.AddSingleton<ILocationManager, LocationManager>();
 
             // Registrazione ViewModels
             builder.Services.AddTransient<MainViewModel>();
