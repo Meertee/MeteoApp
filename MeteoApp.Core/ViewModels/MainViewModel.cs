@@ -33,10 +33,13 @@ namespace MeteoApp.Core.ViewModels
             {
                 await notificationPermissionService.CheckAndRequestPermissionAsync();
                 await FetchCurrentLocation();
+                await UpdateLocationsAsync();
                 _isInitialized = true;
             }
-
-            await LoadLocationsAsync();
+            else
+            {
+                await UpdateLocationsAsync();
+            }
         }
 
 
@@ -52,6 +55,26 @@ namespace MeteoApp.Core.ViewModels
             {
                 Locations.Add(location);
             }
+        }
+
+        private async Task UpdateLocationsAsync()
+        {
+            List<WeatherLocation> savedLocations = await dbService.GetAllLocationsAsync();
+
+            foreach (WeatherLocation location in savedLocations)
+            {
+                WeatherLocation? updated = await weatherApiService.GetWeatherLocationAsync(
+                    location.Latitude, location.Longitude);
+
+                if (updated != null)
+                {
+                    updated.Id = location.Id; // preserve the DB record
+                    updated.IsCurrentLocation = location.IsCurrentLocation; // preserve flags
+                    await locationManager.SaveLocationAsync(updated);
+                }
+            }
+
+            await LoadLocationsAsync();
         }
 
         [RelayCommand]

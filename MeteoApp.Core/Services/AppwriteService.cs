@@ -1,9 +1,7 @@
 ﻿using Appwrite;
 using Appwrite.Services;
-using MeteoApp.Core.Interfaces;
 using MeteoApp.Core.Models;
 using MeteoApp.Core.Services.Interfaces.AppWrite;
-using System.Text.Json;
 
 namespace MeteoApp.Core.Services
 {

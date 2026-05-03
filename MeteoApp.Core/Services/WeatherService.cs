@@ -1,10 +1,8 @@
 ﻿using MeteoApp.Core.Interfaces;
 using MeteoApp.Core.Models;
 using MeteoApp.Core.Services.Interfaces.Preferences;
-using System.ComponentModel.Design;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
-using static MeteoApp.Core.Services.WeatherService;
 
 namespace MeteoApp.Core.Services
 {
@@ -12,7 +10,7 @@ namespace MeteoApp.Core.Services
     {
         private readonly HttpClient _httpClient;
         private readonly ISettingsService _settingsService;
-        private const string ApiKey = "a8cd7e74358a3e4179b66a36f1f419fe";
+        private const string ApiKey = "API_KEY";
 
         public WeatherService(ISettingsService settingsService)
         {
